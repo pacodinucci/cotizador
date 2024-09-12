@@ -12,6 +12,7 @@ datasource db {
 
 model Prices {
   id        String   @id @default(uuid())
+  code      String   @unique
   title     String
   zone      String
   price     Int
