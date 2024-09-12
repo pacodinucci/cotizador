@@ -6,6 +6,15 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Prices {
+  id        String   @id @default(uuid())
+  title     String
+  zone      String
+  price     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
