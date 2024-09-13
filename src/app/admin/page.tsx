@@ -3,7 +3,7 @@ import React from "react";
 
 const AdminPage = () => {
   return (
-    <div className="p-24 flex justify-center text-center">
+    <div className="p-24 flex justify-center">
       <CreatePricesComponent />
     </div>
   );

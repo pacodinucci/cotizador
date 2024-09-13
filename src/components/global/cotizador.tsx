@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useMemo } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -15,23 +16,21 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { precios } from "@/lib/precios";
 import { PiQuestionMarkBold } from "react-icons/pi";
 import { MdOutlineWhatsapp } from "react-icons/md";
 import { Separator } from "../ui/separator";
+import { usePriceStore } from "@/lib/store";
+import { getPrices } from "../../../actions/get-prices";
 
 type Item = {
   nombre: string;
@@ -39,37 +38,67 @@ type Item = {
 };
 
 const Cotizador = () => {
+  const { prices, setPrices } = usePriceStore();
   const [selectedItems, setSelectedItems] = useState<Item[]>([]);
   const [precioTotal, setPrecioTotal] = useState<number>(0);
   const [infoItem, setInfoItem] = useState<Item | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const [showDialog, setShowDialog] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
 
+  // Fetch de precios al montar el componente
+  useEffect(() => {
+    const fetchPrices = async () => {
+      const pricesData = await getPrices();
+      setPrices(pricesData);
+    };
+    fetchPrices();
+  }, [setPrices]);
+
+  // Efecto para detectar si es móvil o no
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 900);
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
+
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  const handleAddPrice = (item: Item) => {
-    if (selectedItems.find((si) => si.nombre === item.nombre)) {
-      setSelectedItems(selectedItems.filter((si) => si.nombre !== item.nombre));
-    } else {
-      setSelectedItems([...selectedItems, item]);
-    }
-  };
-
+  // Cálculo del total
   useEffect(() => {
-    console.log(selectedItems);
     setPrecioTotal(selectedItems.reduce((acc, item) => acc + item.precio, 0));
   }, [selectedItems]);
+
+  // Transformar los precios en zonas específicas
+  const precios = useMemo(() => {
+    const zonas = {
+      ZonaAlta: prices.filter((price) => price.zone === "Alta"),
+      ZonaMedia: prices.filter((price) => price.zone === "Media"),
+      ZonaBaja: prices.filter((price) => price.zone === "Baja"),
+    };
+
+    return Object.fromEntries(
+      Object.entries(zonas).map(([zona, items]) => [
+        zona,
+        items.map((price) => ({
+          nombre: price.title,
+          precio: price.price,
+        })),
+      ])
+    );
+  }, [prices]);
+
+  const handleAddPrice = (item: Item) => {
+    setSelectedItems((prevItems) =>
+      prevItems.some((si) => si.nombre === item.nombre)
+        ? prevItems.filter((si) => si.nombre !== item.nombre)
+        : [...prevItems, item]
+    );
+  };
 
   const handleShowInfo = (event: React.MouseEvent, item: Item) => {
     event.stopPropagation();
@@ -77,18 +106,17 @@ const Cotizador = () => {
   };
 
   const handleWhatsAppSend = () => {
-    if (!selectedItems.length) {
+    if (selectedItems.length === 0) {
       setShowDialog(true);
     } else {
-      let message = `Hola, me gustaría solicitar una cotización para los siguientes ítems:\n`;
-      selectedItems.forEach((item) => {
-        message += `${item.nombre} - $${item.precio}\n`;
-      });
-      message += `Total: $${precioTotal}`;
+      const message = selectedItems
+        .map((item) => `${item.nombre} - $${item.precio}`)
+        .join("\n");
+      const totalMessage = `Total: $${precioTotal}`;
+      const fullMessage = `Hola, me gustaría solicitar una cotización para los siguientes ítems:\n${message}\n${totalMessage}`;
 
-      const encodedMessage = encodeURIComponent(message);
-      const phoneNumber = "5491143994339";
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      const encodedMessage = encodeURIComponent(fullMessage);
+      const whatsappUrl = `https://wa.me/5491143994339?text=${encodedMessage}`;
       window.open(whatsappUrl, "_blank");
     }
   };
@@ -99,7 +127,6 @@ const Cotizador = () => {
         isMobile ? "w-full" : "w-[50%]"
       } flex gap-10 px-5 py-10`}
     >
-      {/* <div className="text-3xl text-white">Cotizador</div> */}
       <div className={`${isMobile ? "w-[70%]" : "w-[60%]"} `}>
         <Accordion type="single" collapsible className="text-white w-3/5">
           {Object.entries(precios).map(([zona, items], index) => (
@@ -116,7 +143,7 @@ const Cotizador = () => {
                   <div
                     key={item.nombre}
                     className={`py-2 px-4 text-sm font-semibold border-2 rounded-lg cursor-pointer flex items-center justify-between hover:opacity-75 ${
-                      selectedItems.find((it) => it.nombre === item.nombre)
+                      selectedItems.some((it) => it.nombre === item.nombre)
                         ? "bg-emerald-600"
                         : "bg-indigo-500"
                     }`}
@@ -182,6 +209,7 @@ const Cotizador = () => {
           <p>{isMobile ? "Continuar" : "Continuar en Whatsapp"}</p>
         </Button>
       </div>
+
       {infoItem && (
         <Drawer open={!!infoItem} onClose={() => setInfoItem(null)}>
           <DrawerContent className="flex flex-col items-center justify-center">
@@ -196,9 +224,9 @@ const Cotizador = () => {
           </DrawerContent>
         </Drawer>
       )}
+
       {showDialog && (
-        <AlertDialog open={!!showDialog}>
-          {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}
+        <AlertDialog open={showDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>

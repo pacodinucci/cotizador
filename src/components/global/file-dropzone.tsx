@@ -1,3 +1,4 @@
+import { montserrat } from "@/lib/fonts";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import * as XLSX from "xlsx";
@@ -44,10 +45,14 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({ onFileProcessed }) => {
       //     padding: "20px",
       //     textAlign: "center",
       //   }}
-      className="border-2 border-dashed rounded-lg border-slate-800 px-24 py-16"
+      className="border-2 border-dashed rounded-lg border-neutral-500 px-24 py-16"
     >
       <input {...getInputProps()} />
-      <p>Click o arrastrar archivo (.csv o .xsls)</p>
+      <p
+        className={`${montserrat.className} text-lg text-center text-neutral-700`}
+      >
+        Click o arrastrar archivo (.csv o .xsls)
+      </p>
     </div>
   );
 };

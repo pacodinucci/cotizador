@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import FileDropzone from "@/components/global/file-dropzone";
 import { useRouter } from "next/navigation";
 import { createPrices } from "../../../actions/create-prices";
+import { oswald } from "@/lib/fonts";
+import { Separator } from "../ui/separator";
 
 const CreatePricesComponent = () => {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
@@ -13,14 +15,15 @@ const CreatePricesComponent = () => {
     const [headers, ...rows] = data;
 
     const prices = rows.map((row) => ({
-      title: row[0],
-      zone: row[1],
-      price: row[2],
+      code: row[0],
+      title: row[1],
+      zone: row[2],
+      price: row[3],
     }));
 
     const success = await createPrices(prices);
     if (success) {
-      setUploadStatus("Success! Prices have been uploaded.");
+      setUploadStatus("Precios actualizados!");
       //   router.push("/prices");
     } else {
       setUploadStatus("Failed to upload prices.");
@@ -28,10 +31,17 @@ const CreatePricesComponent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-8">
-      <h1 className="text-3xl">Actualizar Precios</h1>
-      <FileDropzone onFileProcessed={handleFileProcessed} />
-      {uploadStatus && <p>{uploadStatus}</p>}
+    <div className="flex flex-col gap-y-8 w-full px-48">
+      <h1
+        className={`${oswald.className} uppercase text-3xl px-6 text-neutral-700`}
+      >
+        Actualizar Precios
+      </h1>
+      <Separator />
+      <div className="px-6">
+        <FileDropzone onFileProcessed={handleFileProcessed} />
+        {uploadStatus && <p>{uploadStatus}</p>}
+      </div>
     </div>
   );
 };

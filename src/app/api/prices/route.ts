@@ -17,6 +17,8 @@ export async function POST(req: Request) {
       return new NextResponse("No prices provided.", { status: 400 });
     }
 
+    console.log("PRICES -> ", prices);
+
     // Separar los códigos de los precios
     const codes = prices.map((price: Price) => price.code);
 
@@ -64,6 +66,16 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("[PRICES_BATCH_CREATE]", error);
+    return new NextResponse("Internal server error", { status: 500 });
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    const prices = await db.prices.findMany();
+    return NextResponse.json(prices);
+  } catch (error) {
+    console.error("[PRICES_GET]", error);
     return new NextResponse("Internal server error", { status: 500 });
   }
 }
