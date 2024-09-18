@@ -19,6 +19,10 @@ const config = {
       },
     },
     extend: {
+      boxShadow: {
+        outline:
+          "3px 3px 0px #777, -3px -3px 0px #777, -3px 3px 0px #777, 3px -3px 0px #777",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
@@ -56,6 +60,9 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      backgroundImage: {
+        navbarImage: "url(/fondo.png)",
       },
       borderRadius: {
         lg: "var(--radius)",
