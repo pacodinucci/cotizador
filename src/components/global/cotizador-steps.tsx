@@ -252,7 +252,7 @@ const CotizadorSteps = () => {
             {/* Primera fila con borde inferior */}
             <div className="h-12 col-span-1 border-b border-neutral-500 flex items-center whitespace-nowrap text-xs font-medium">
               <Dot className="text-[#EAC45E] -mx-2 shrink-0" size={40} />
-              Descuento Multizona
+              Multizona
             </div>
             <div className="h-12 col-span-1 border-b border-neutral-500 flex justify-center items-center">
               {selectedTreatments.length <= 1
@@ -266,7 +266,7 @@ const CotizadorSteps = () => {
             {/* Segunda fila */}
             <div className="h-12 col-span-1 flex items-center whitespace-nowrap text-xs font-medium">
               <Dot className="text-[#EAC45E] -mx-2" size={40} />
-              Descuento grupal
+              Grupal
             </div>
             <div className="h-12 col-span-1 flex justify-center items-center">
               Celda 5
@@ -313,7 +313,7 @@ const CotizadorSteps = () => {
                 6
               </span>
               <div
-                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4`}
+                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4 pl-10`}
               >
                 PACK DE SESIONES
               </div>
@@ -366,7 +366,7 @@ const CotizadorSteps = () => {
             4to paso <Dot className="text-[#EAC45E] -mx-2" size={40} />
             <span className="font-medium">Consultar por este presupuesto</span>
           </h3>
-          <p className="text-neutral-500 text-sm -mt-2">
+          <p className="text-neutral-500 text-sm">
             Selecciona el link a continuacion para enviarnos el presupuesto por
             el cual queres consultar o tomar un turno
           </p>
