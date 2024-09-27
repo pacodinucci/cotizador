@@ -13,14 +13,25 @@ import {
 import { getPrices } from "../../../actions/get-prices";
 import { usePriceStore } from "@/lib/store";
 import { Separator } from "../ui/separator";
+import { formatNumber } from "@/lib/utils";
 
 const CotizadorSteps = () => {
   const { prices, setPrices } = usePriceStore();
   const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
   const [descuento, setDescuento] = useState<number>(0);
   const [descuentoGrupal, setDescuentoGrupal] = useState<number>(0);
-  const [oneSessionPrice, setOneSessionPrice] = useState<number | null>(null);
-  const [sixSessionsPrice, setSixSessionsPrice] = useState<number | null>(null);
+  const [oneSessionCashPrice, setOneSessionCashPrice] = useState<number | null>(
+    null
+  );
+  const [oneSessionCardPrice, setOneSessionCardPrice] = useState<number | null>(
+    null
+  );
+  const [sixSessionsCashPrice, setSixSessionsCashPrice] = useState<
+    number | null
+  >(null);
+  const [sixSessionsCardPrice, setSixSessionsCardPrice] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -31,7 +42,6 @@ const CotizadorSteps = () => {
   }, [setPrices]);
 
   useEffect(() => {
-    // Actualiza el descuento cuando cambia el número de zonas seleccionadas
     if (selectedTreatments.length === 2) {
       setDescuento(10);
     } else if (selectedTreatments.length === 3) {
@@ -41,9 +51,32 @@ const CotizadorSteps = () => {
     } else if (selectedTreatments.length >= 5) {
       setDescuento(30);
     } else {
-      setDescuento(0); // Sin descuento si es menos de 2 zonas
     }
   }, [selectedTreatments]);
+
+  useEffect(() => {
+    // Calcula el precio con tarjeta basado en los tratamientos seleccionados y el descuento
+    let totalCardPrice = 0;
+
+    selectedTreatments.forEach((treatment) => {
+      const priceObj = prices.find((price) => price.title === treatment);
+      if (priceObj) {
+        totalCardPrice += priceObj.price;
+      }
+    });
+
+    // Calcula el descuento total (multizona + grupal)
+    const descuentoTotal = descuento + descuentoGrupal;
+    const finalCardPrice =
+      totalCardPrice - totalCardPrice * (descuentoTotal / 100);
+
+    // Establece el precio con tarjeta
+    setOneSessionCardPrice(finalCardPrice);
+
+    // Establece el precio en efectivo con un 20% de descuento adicional
+    const finalCashPrice = finalCardPrice - finalCardPrice * 0.2;
+    setOneSessionCashPrice(finalCashPrice);
+  }, [selectedTreatments, descuento, descuentoGrupal, prices]);
 
   const handleSelectTreatment = (treatment: string) => {
     setSelectedTreatments((prevSelected) => {
@@ -244,18 +277,69 @@ const CotizadorSteps = () => {
         </div>
         <div>
           <div>
-            <div className="flex relative h-[100px]">
-              <span className="absolute left-8 bottom-0 text-8xl font-bold text-black pr-2">
+            <div className="flex flex-col relative h-[100px]">
+              <span className="absolute left-8 bottom-0 text-8xl font-bold text-black pr-2 z-10">
                 1
               </span>
               <div
-                className={`${montserrat.className} w-full h-1/2 self-end text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4`}
+                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4`}
               >
                 SESIÓN INDIVIDUAL
               </div>
             </div>
-            <div></div>
-            <div></div>
+            <div>
+              <div>
+                <div className="text-center font-medium h-12 flex items-end justify-center">
+                  {oneSessionCashPrice && formatNumber(oneSessionCashPrice)}
+                </div>
+                <div className="bg-gray-200 p-2 text-center">
+                  Precio en efectivo 😊
+                </div>
+              </div>
+              <div>
+                <div className="text-center font-medium h-12 flex items-end justify-center">
+                  {oneSessionCardPrice && formatNumber(oneSessionCardPrice)}
+                </div>
+                <div className="bg-gray-200 p-2 text-center">
+                  Débito o crédito hasta en 6 cuotas sin interés
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="flex flex-col relative h-[100px]">
+              <span className="absolute left-8 bottom-0 text-8xl font-bold text-black pr-2 z-10">
+                6
+              </span>
+              <div
+                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4`}
+              >
+                PACK DE SESIONES
+              </div>
+            </div>
+            <div>
+              <div>
+                <div className="text-center font-medium h-12 flex items-end justify-center">
+                  {oneSessionCashPrice && formatNumber(oneSessionCashPrice * 6)}
+                </div>
+                <div className="bg-gray-200 p-2 text-center">
+                  Precio en efectivo 😊
+                </div>
+              </div>
+              <div>
+                <div className="text-center font-medium h-12 flex items-end justify-center">
+                  {oneSessionCardPrice && formatNumber(oneSessionCardPrice * 6)}
+                </div>
+                <div className="bg-gray-200 p-2 text-center">
+                  Débito o crédito hasta en 6 cuotas sin interés
+                </div>
+              </div>
+              <div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
           </div>
           <div></div>
         </div>
