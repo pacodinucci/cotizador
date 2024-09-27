@@ -14,6 +14,7 @@ import { getPrices } from "../../../actions/get-prices";
 import { usePriceStore } from "@/lib/store";
 import { Separator } from "../ui/separator";
 import { formatNumber } from "@/lib/utils";
+import Image from "next/image";
 
 const CotizadorSteps = () => {
   const { prices, setPrices } = usePriceStore();
@@ -92,7 +93,7 @@ const CotizadorSteps = () => {
     selectedTreatments.includes(treatment);
 
   return (
-    <div className="bg-gray-100 min-h-screen px-4 flex flex-col gap-y-4 pt-8">
+    <div className="bg-gray-100 min-h-screen px-4 flex flex-col gap-y-4 py-8">
       <div
         className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 py-1 flex flex-col gap-y-4`}
       >
@@ -219,7 +220,7 @@ const CotizadorSteps = () => {
         </div>
       </div>
       <div
-        className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 py-1 flex flex-col gap-y-4`}
+        className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 pt-1 pb-4 flex flex-col gap-y-4`}
       >
         <div className="flex flex-col">
           <h3 className="font-light flex items-center">
@@ -334,14 +335,50 @@ const CotizadorSteps = () => {
                   Débito o crédito hasta en 6 cuotas sin interés
                 </div>
               </div>
-              <div>
-                <div></div>
-                <div></div>
-                <div></div>
+              <div className="flex flex-col gap-2 mt-4">
+                <div className="flex gap-2 items-center">
+                  <Dot className="text-[#EAC45E] shrink-0" size={40} />
+                  <p className="">Presupuesto válido por 10 días.</p>
+                </div>
+                <div className="flex gap-2">
+                  <Dot className="text-[#EAC45E] shrink-0" size={40} />
+                  <p className="pt-2">
+                    Para confirmar los turnos es necesaria una seña del 30%
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Dot className="text-[#EAC45E] shrink-0" size={40} />
+                  <p className="pt-2">
+                    Para descuento grupal los integrantes deberáan contratar en
+                    forma simultánea.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-          <div></div>
+        </div>
+      </div>
+      <div
+        className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 py-1 flex flex-col gap-y-4`}
+      >
+        <div className="flex flex-col">
+          <h3 className="font-light flex items-center">
+            4to paso <Dot className="text-[#EAC45E] -mx-2" size={40} />
+            <span className="font-medium">Consultar por este presupuesto</span>
+          </h3>
+          <p className="text-neutral-500 text-sm -mt-2">
+            Selecciona el link a continuacion para enviarnos el presupuesto por
+            el cual queres consultar o tomar un turno
+          </p>
+          <div className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white text-center font-semibold shadow-md rounded-full w-1/2 mx-auto my-4 py-4 flex items-center gap-2 justify-center text-xl">
+            Enviar
+            <Image
+              src="/whatsapp.svg"
+              alt="clinica w whatsapp"
+              width={30}
+              height={0}
+            />
+          </div>
         </div>
       </div>
     </div>
