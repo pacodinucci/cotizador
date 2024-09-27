@@ -19,6 +19,7 @@ const CreatePricesComponent = () => {
       title: row[1],
       zone: row[2],
       price: row[3],
+      smallZone: row[4],
     }));
 
     const success = await createPrices(prices);

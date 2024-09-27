@@ -6,6 +6,7 @@ interface Price {
   title: string;
   zone: string;
   price: number;
+  smallZone: boolean;
 }
 
 export async function POST(req: Request) {

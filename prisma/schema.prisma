@@ -15,6 +15,7 @@ model Prices {
   code      String   @unique
   title     String
   zone      String
+  smallZone Boolean
   price     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -17,6 +17,10 @@ import { Separator } from "../ui/separator";
 const CotizadorSteps = () => {
   const { prices, setPrices } = usePriceStore();
   const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
+  const [descuento, setDescuento] = useState<number>(0);
+  const [descuentoGrupal, setDescuentoGrupal] = useState<number>(0);
+  const [oneSessionPrice, setOneSessionPrice] = useState<number | null>(null);
+  const [sixSessionsPrice, setSixSessionsPrice] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -27,7 +31,18 @@ const CotizadorSteps = () => {
   }, [setPrices]);
 
   useEffect(() => {
-    console.log(selectedTreatments);
+    // Actualiza el descuento cuando cambia el número de zonas seleccionadas
+    if (selectedTreatments.length === 2) {
+      setDescuento(10);
+    } else if (selectedTreatments.length === 3) {
+      setDescuento(20);
+    } else if (selectedTreatments.length === 4) {
+      setDescuento(25);
+    } else if (selectedTreatments.length >= 5) {
+      setDescuento(30);
+    } else {
+      setDescuento(0); // Sin descuento si es menos de 2 zonas
+    }
   }, [selectedTreatments]);
 
   const handleSelectTreatment = (treatment: string) => {
@@ -64,7 +79,7 @@ const CotizadorSteps = () => {
                 placeholder={
                   selectedTreatments.length > 0
                     ? selectedTreatments[selectedTreatments.length - 1]
-                    : "Selecciona uno o más tratamientos"
+                    : "Selecciona una o más zonas"
                 }
               />
             </SelectTrigger>
@@ -128,7 +143,6 @@ const CotizadorSteps = () => {
         {/* Mostrar tratamientos seleccionados con viñeta */}
         {selectedTreatments.length > 0 && (
           <div className="mt-4">
-            {/* <h4 className="font-medium text-gray-700">Zonas seleccionadas:</h4> */}
             <ul className="list-none mt-2 space-y-1">
               {selectedTreatments.map((treatment, index) => (
                 <li key={index} className="flex items-center space-x-2">
@@ -153,22 +167,97 @@ const CotizadorSteps = () => {
           </p>
         </div>
         <div>
-          <Select>
+          <Select onValueChange={(value) => setDescuentoGrupal(Number(value))}>
             <SelectTrigger className="rounded-none">
               <SelectValue placeholder="Elegí una opción" />
             </SelectTrigger>
             <SelectContent className="rounded-none">
-              <SelectItem value="1" className="text-base">
-                Sola/o
+              <SelectItem value="0" className="text-base">
+                Sola/o (0%)
               </SelectItem>
-              <SelectItem value="2" className="text-base">
+              <SelectItem value="5" className="text-base">
                 2 personas (5% off c/u)
               </SelectItem>
-              <SelectItem value="3" className="text-base">
+              <SelectItem value="10" className="text-base">
                 3 personas o mas (10% off c/u)
               </SelectItem>
             </SelectContent>
           </Select>
+        </div>
+      </div>
+      <div
+        className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 py-1 flex flex-col gap-y-4`}
+      >
+        <div className="flex flex-col">
+          <h3 className="font-light flex items-center">
+            3er paso <Dot className="text-[#EAC45E] -mx-2" size={40} />
+            <span className="font-medium">Verifica tu presupuesto</span>
+          </h3>
+          <p className="text-neutral-500 text-sm -mt-3">
+            Podés armar cuantas opciones de presupuestos necesites, solo cambia
+            las zonas y listo!
+          </p>
+        </div>
+        <div className="py-2">
+          {/* Div superior con 3 columnas */}
+          <div className="grid grid-cols-3 gap-4 mb-3 border border-neutral-500">
+            <div className="h-10 font-medium flex justify-center items-center pl-8">
+              Descuentos
+            </div>
+            <div className="h-10 flex justify-end items-center text-sm text-right">
+              Aplicados
+            </div>
+            <div className="h-10 flex items-center justify-end pr-1 text-sm text-right">
+              % Descuento
+            </div>
+          </div>
+
+          {/* Div inferior con un grid de 3 columnas, donde la primera ocupa el 40% y las otras dos el 30% */}
+          <div className="grid grid-cols-[45%_25%_30%] grid-rows-2">
+            {/* Ajusta el gap si necesitas más espacio entre celdas */}
+            {/* Primera fila con borde inferior */}
+            <div className="h-12 col-span-1 border-b border-neutral-500 flex items-center whitespace-nowrap text-xs font-medium">
+              <Dot className="text-[#EAC45E] -mx-2 shrink-0" size={40} />
+              Descuento Multizona
+            </div>
+            <div className="h-12 col-span-1 border-b border-neutral-500 flex justify-center items-center">
+              {selectedTreatments.length <= 1
+                ? "No aplica"
+                : `${selectedTreatments.length} zonas`}
+            </div>
+            <div className="h-12 col-span-1 border-b border-l border-neutral-500 flex justify-center items-center font-semibold text-[#EAC45E]">
+              {descuento}%
+            </div>
+
+            {/* Segunda fila */}
+            <div className="h-12 col-span-1 flex items-center whitespace-nowrap text-xs font-medium">
+              <Dot className="text-[#EAC45E] -mx-2" size={40} />
+              Descuento grupal
+            </div>
+            <div className="h-12 col-span-1 flex justify-center items-center">
+              Celda 5
+            </div>
+            <div className="h-12 col-span-1 border-l border-neutral-500 flex justify-center items-center font-semibold text-[#EAC45E]">
+              {descuentoGrupal}%
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div className="flex relative h-[100px]">
+              <span className="absolute left-8 bottom-0 text-8xl font-bold text-black pr-2">
+                1
+              </span>
+              <div
+                className={`${montserrat.className} w-full h-1/2 self-end text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4`}
+              >
+                SESIÓN INDIVIDUAL
+              </div>
+            </div>
+            <div></div>
+            <div></div>
+          </div>
+          <div></div>
         </div>
       </div>
     </div>
