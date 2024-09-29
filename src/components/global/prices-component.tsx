@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Plus, Sheet } from "lucide-react";
 import { usePriceStore } from "@/lib/store";
 import { getPrices } from "../../../actions/get-prices";
 import { Separator } from "../ui/separator";
@@ -9,6 +10,7 @@ import { oswald } from "@/lib/fonts";
 import { Button } from "../ui/button";
 
 const PricesComponent = () => {
+  const router = useRouter();
   const { prices, setPrices } = usePriceStore();
 
   useEffect(() => {
@@ -23,6 +25,10 @@ const PricesComponent = () => {
     console.log(prices);
   }, [prices]);
 
+  const handleRowClick = (id: string) => {
+    router.push(`/admin/prices/${id}`);
+  };
+
   return (
     <div className="flex flex-col gap-y-8 w-full md:px-48">
       <div className="flex justify-between items-center">
@@ -31,9 +37,14 @@ const PricesComponent = () => {
         >
           Precios
         </h1>
-        <Button variant="outline">
-          <Plus />
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <Sheet />
+          </Button>
+          <Button variant="outline">
+            <Plus />
+          </Button>
+        </div>
       </div>
       <Separator />
       <div className="overflow-x-auto">
@@ -49,7 +60,11 @@ const PricesComponent = () => {
           </thead>
           <tbody>
             {prices.map((price, index) => (
-              <tr key={index} className="text-center">
+              <tr
+                key={index}
+                className="text-center"
+                onClick={() => handleRowClick(price.id)}
+              >
                 <td className="px-4 py-2 border">{price.title}</td>
                 <td className="px-4 py-2 border">{price.code}</td>
                 <td className="px-4 py-2 border">{price.zone}</td>

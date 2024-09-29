@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { createPrices } from "../../../actions/create-prices";
 import { oswald } from "@/lib/fonts";
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const CreatePricesComponent = () => {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
@@ -33,11 +35,16 @@ const CreatePricesComponent = () => {
 
   return (
     <div className="flex flex-col gap-y-8 w-full md:px-48">
-      <h1
-        className={`${oswald.className} uppercase text-3xl px-6 text-neutral-700`}
-      >
-        Actualizar Precios
-      </h1>
+      <div className="flex justify-between items-center px-4">
+        <h1
+          className={`${oswald.className} uppercase text-3xl px-2 text-neutral-700`}
+        >
+          Actualizar Precios
+        </h1>
+        <Button variant="outline" onClick={() => router.push("/admin")}>
+          <ArrowLeft />
+        </Button>
+      </div>
       <Separator />
       <div className="px-6">
         <FileDropzone onFileProcessed={handleFileProcessed} />

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 interface Price {
+  id: string;
   code: string;
   title: string;
   zone: string;
