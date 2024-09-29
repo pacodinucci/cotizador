@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { getPriceById } from "../../../actions/get-price-by-id";
 import { usePriceStore } from "@/lib/store";
 import { Prices } from "@prisma/client";
@@ -24,6 +25,8 @@ import {
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import { oswald } from "@/lib/fonts";
+import { Button } from "../ui/button";
+import { ArrowLeft } from "lucide-react";
 
 interface PriceFormProps {
   initialData: Prices | null;
@@ -46,6 +49,7 @@ const formSchema = z.object({
 });
 
 const PriceForm = ({ initialData }: PriceFormProps) => {
+  const router = useRouter();
   const defaultValues = initialData
     ? {
         ...initialData,
@@ -65,16 +69,30 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
 
   const isLoading = form.formState.isSubmitting;
 
+  const sectors = ["Alta", "Media", "Baja"];
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log("Form submitted", data);
+  };
+
   return (
     <div className="p-4">
-      <h1
-        className={`${oswald.className} uppercase text-3xl px-6 py-4 text-neutral-700`}
-      >
-        Actualizar zona
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1
+          className={`${oswald.className} uppercase text-3xl px-2 py-4 text-neutral-700`}
+        >
+          Actualizar zona
+        </h1>
+        <Button variant="outline" onClick={() => router.push("/admin")}>
+          <ArrowLeft />
+        </Button>
+      </div>
       <Separator />
       <Form {...form}>
-        <form className="flex flex-col gap-y-4 py-4">
+        <form
+          className="flex flex-col gap-y-4 py-4"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <FormField
             name="title"
             control={form.control}
@@ -119,6 +137,13 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
                       />
                     </SelectTrigger>
                   </FormControl>
+                  <SelectContent>
+                    {sectors.map((sector) => (
+                      <SelectItem key={sector} value={sector}>
+                        {sector}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </FormItem>
             )}
@@ -135,6 +160,37 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
               </FormItem>
             )}
           />
+          <FormField
+            name="smallZone"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Zona Chica</FormLabel>
+                <Select
+                  disabled={isLoading}
+                  onValueChange={(value) => field.onChange(value === "true")}
+                  value={field.value ? "true" : "false"} // Convertir el valor booleano en string para el Select
+                  defaultValue={field.value ? "true" : "false"}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="Selecciona una opción"
+                        defaultValue={field.value ? "true" : "false"}
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="true">Sí</SelectItem>
+                    <SelectItem value="false">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="mt-4" disabled={isLoading}>
+            {isLoading ? "Guardando..." : "Guardar Cambios"}
+          </Button>
         </form>
       </Form>
     </div>
