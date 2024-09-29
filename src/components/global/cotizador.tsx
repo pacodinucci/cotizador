@@ -197,7 +197,7 @@ const Cotizador = () => {
           </div>
         </div>
         <Button
-          variant="whatsapp"
+          variant="outline"
           className={`mt-4 flex ${
             isMobile
               ? "justify-start gap-5 font-semibold"
