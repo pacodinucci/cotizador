@@ -32,7 +32,7 @@ const CreatePricesComponent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-8 w-full px-48">
+    <div className="flex flex-col gap-y-8 w-full md:px-48">
       <h1
         className={`${oswald.className} uppercase text-3xl px-6 text-neutral-700`}
       >

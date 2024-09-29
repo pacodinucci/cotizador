@@ -291,7 +291,9 @@ const CotizadorSteps = () => {
             <div>
               <div>
                 <div className="text-center font-medium h-12 flex items-end justify-center">
-                  {oneSessionCashPrice && formatNumber(oneSessionCashPrice)}
+                  {oneSessionCashPrice
+                    ? formatNumber(oneSessionCashPrice)
+                    : "$0"}
                 </div>
                 <div className="bg-gray-200 p-2 text-center">
                   Precio en efectivo 😊
@@ -299,7 +301,9 @@ const CotizadorSteps = () => {
               </div>
               <div>
                 <div className="text-center font-medium h-12 flex items-end justify-center">
-                  {oneSessionCardPrice && formatNumber(oneSessionCardPrice)}
+                  {oneSessionCardPrice
+                    ? formatNumber(oneSessionCardPrice)
+                    : "$0"}
                 </div>
                 <div className="bg-gray-200 p-2 text-center">
                   Débito o crédito hasta en 6 cuotas sin interés
@@ -321,7 +325,9 @@ const CotizadorSteps = () => {
             <div>
               <div>
                 <div className="text-center font-medium h-12 flex items-end justify-center">
-                  {oneSessionCashPrice && formatNumber(oneSessionCashPrice * 6)}
+                  {oneSessionCashPrice
+                    ? formatNumber(oneSessionCashPrice * 6)
+                    : "$0"}
                 </div>
                 <div className="bg-gray-200 p-2 text-center">
                   Precio en efectivo 😊
@@ -329,7 +335,9 @@ const CotizadorSteps = () => {
               </div>
               <div>
                 <div className="text-center font-medium h-12 flex items-end justify-center">
-                  {oneSessionCardPrice && formatNumber(oneSessionCardPrice * 6)}
+                  {oneSessionCardPrice
+                    ? formatNumber(oneSessionCardPrice * 6)
+                    : "$0"}
                 </div>
                 <div className="bg-gray-200 p-2 text-center">
                   Débito o crédito hasta en 6 cuotas sin interés

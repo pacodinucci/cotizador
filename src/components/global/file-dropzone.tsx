@@ -45,7 +45,7 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({ onFileProcessed }) => {
       //     padding: "20px",
       //     textAlign: "center",
       //   }}
-      className="border-2 border-dashed rounded-lg border-neutral-500 px-24 py-16"
+      className="border-2 border-dashed rounded-lg border-neutral-500 px-2 md:px-24 py-4 md:py-16"
     >
       <input {...getInputProps()} />
       <p

@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const existingPrices = await db.prices.findMany({
       where: {
         code: {
-          in: codes, // Buscar todos los códigos existentes
+          in: codes,
         },
       },
     });
