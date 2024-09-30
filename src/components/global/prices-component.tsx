@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Sheet } from "lucide-react";
+import { Edit, Plus, Sheet, Trash2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePriceStore } from "@/lib/store";
 import { getPrices } from "../../../actions/get-prices";
 import { Separator } from "../ui/separator";
@@ -12,6 +13,7 @@ import { Button } from "../ui/button";
 const PricesComponent = () => {
   const router = useRouter();
   const { prices, setPrices } = usePriceStore();
+  const [selectedRow, setSelectedRow] = useState<string | null>(null); // Track the selected row
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -21,11 +23,13 @@ const PricesComponent = () => {
     fetchPrices();
   }, [setPrices]);
 
-  useEffect(() => {
-    console.log(prices);
-  }, [prices]);
-
   const handleRowClick = (id: string) => {
+    // Toggle selection: if clicked row is already selected, deselect it
+    setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));
+  };
+
+  const handleActionClick = (id: string) => {
+    console.log("Action button clicked for row:", id);
     router.push(`/admin/prices/${id}`);
   };
 
@@ -48,7 +52,7 @@ const PricesComponent = () => {
       </div>
       <Separator />
       <div className="overflow-x-auto">
-        <table className="min-h-full table-auto border-collapse">
+        <table className="min-h-full table-auto border-collapse w-full">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-4 py-2 border">Zona</th>
@@ -62,16 +66,45 @@ const PricesComponent = () => {
             {prices.map((price, index) => (
               <tr
                 key={index}
-                className="text-center"
+                className="text-center relative group"
                 onClick={() => handleRowClick(price.id)}
               >
-                <td className="px-4 py-2 border">{price.title}</td>
-                <td className="px-4 py-2 border">{price.code}</td>
-                <td className="px-4 py-2 border">{price.zone}</td>
-                <td className="px-4 py-2 border">{price.price}</td>
-                <td className="px-4 py-2 border">
+                <td className="px-4 py-4 border">{price.title}</td>
+                <td className="px-4 py-4 border">{price.code}</td>
+                <td className="px-4 py-4 border">{price.zone}</td>
+                <td className="px-4 py-4 border">{price.price}</td>
+                <td className="px-4 py-4 border">
                   {price.smallZone ? "Sí" : "No"}
                 </td>
+
+                {/* Action button (animated) */}
+                <AnimatePresence>
+                  {selectedRow === price.id && (
+                    <motion.td
+                      className="absolute left-0 top-0 h-full flex items-center justify-center bg-white text-white z-10"
+                      initial={{ x: "-100%", opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: "-100%", opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ height: "100%" }}
+                    >
+                      <Button
+                        size="sm"
+                        className="bg-blue-600 h-full rounded-none px-6"
+                      >
+                        <Edit />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="rounded-none h-full px-6"
+                        onClick={() => handleActionClick(price.id)}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </motion.td>
+                  )}
+                </AnimatePresence>
               </tr>
             ))}
           </tbody>

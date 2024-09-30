@@ -2,10 +2,9 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getPriceById } from "../../../actions/get-price-by-id";
-import { usePriceStore } from "@/lib/store";
 import { Prices } from "@prisma/client";
 import * as z from "zod";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -39,7 +38,7 @@ const formSchema = z.object({
   zone: z.string().min(1, {
     message: "Debe elegir un sector.",
   }),
-  price: z.number().min(1, {
+  price: z.string().min(1, {
     message: "El precio es requerido.",
   }),
   code: z.string().min(3, {
@@ -50,6 +49,9 @@ const formSchema = z.object({
 
 const PriceForm = ({ initialData }: PriceFormProps) => {
   const router = useRouter();
+
+  console.log(initialData);
+
   const defaultValues = initialData
     ? {
         ...initialData,
@@ -57,13 +59,14 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
     : {
         title: "",
         zone: "",
-        price: 0,
+        price: "",
         code: "",
         smallZone: false,
       };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    //@ts-ignore
     defaultValues,
   });
 
@@ -71,8 +74,26 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
 
   const sectors = ["Alta", "Media", "Baja"];
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log("Form submitted", data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const processedData = {
+      ...data,
+      price: Number(data.price),
+    };
+
+    try {
+      const payload = { prices: [processedData] };
+      if (initialData) {
+        await axios.patch(`/api/prices/${initialData.id}`, payload);
+        console.log("Registro actualizado");
+      } else {
+        await axios.post("/api/prices", payload);
+        console.log("Nuevo registro creado");
+      }
+
+      router.push("/admin");
+    } catch (error) {
+      console.error("Error al guardar los datos:", error);
+    }
   };
 
   return (
@@ -81,7 +102,7 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
         <h1
           className={`${oswald.className} uppercase text-3xl px-2 py-4 text-neutral-700`}
         >
-          Actualizar zona
+          {initialData ? "Actualizar zona" : "Crear zona"}
         </h1>
         <Button variant="outline" onClick={() => router.push("/admin")}>
           <ArrowLeft />
@@ -155,7 +176,7 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
               <FormItem>
                 <FormLabel>Precio</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} type="number" />
                 </FormControl>
               </FormItem>
             )}
@@ -169,7 +190,7 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
                 <Select
                   disabled={isLoading}
                   onValueChange={(value) => field.onChange(value === "true")}
-                  value={field.value ? "true" : "false"} // Convertir el valor booleano en string para el Select
+                  value={field.value ? "true" : "false"}
                   defaultValue={field.value ? "true" : "false"}
                 >
                   <FormControl>
@@ -189,7 +210,11 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
             )}
           />
           <Button type="submit" className="mt-4" disabled={isLoading}>
-            {isLoading ? "Guardando..." : "Guardar Cambios"}
+            {isLoading
+              ? "Guardando..."
+              : initialData
+              ? "Guardar Cambios"
+              : "Crear Zona"}
           </Button>
         </form>
       </Form>

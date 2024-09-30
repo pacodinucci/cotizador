@@ -12,7 +12,9 @@ interface Price {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    console.log(body);
     const { prices } = body;
+    console.log("prices --> ", prices);
 
     if (!prices || prices.length === 0) {
       return new NextResponse("No prices provided.", { status: 400 });

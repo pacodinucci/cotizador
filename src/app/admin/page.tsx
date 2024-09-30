@@ -4,7 +4,7 @@ import React from "react";
 
 const AdminPage = () => {
   return (
-    <div className="p-8 md:p-24 flex justify-center">
+    <div className="px-4 py-8 md:p-24 flex justify-center">
       {/* <CreatePricesComponent /> */}
       <PricesComponent />
     </div>
