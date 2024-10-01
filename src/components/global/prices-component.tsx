@@ -9,28 +9,62 @@ import { getPrices } from "../../../actions/get-prices";
 import { Separator } from "../ui/separator";
 import { oswald } from "@/lib/fonts";
 import { Button } from "../ui/button";
+import { deletePrice } from "../../../actions/delete-price";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerClose,
+  DrawerTrigger,
+} from "../ui/drawer"; // Import your Drawer component
 
 const PricesComponent = () => {
   const router = useRouter();
   const { prices, setPrices } = usePriceStore();
   const [selectedRow, setSelectedRow] = useState<string | null>(null); // Track the selected row
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Control the drawer visibility
+  const [deleteId, setDeleteId] = useState<string | null>(null); // Track which item to delete
+
+  const refreshPrices = async () => {
+    const updatedPrices = await getPrices();
+    setPrices(updatedPrices);
+  };
+
+  const fetchPrices = async () => {
+    const pricesData = await getPrices();
+    setPrices(pricesData);
+  };
 
   useEffect(() => {
-    const fetchPrices = async () => {
-      const pricesData = await getPrices();
-      setPrices(pricesData);
-    };
     fetchPrices();
   }, [setPrices]);
 
   const handleRowClick = (id: string) => {
-    // Toggle selection: if clicked row is already selected, deselect it
     setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));
   };
 
-  const handleActionClick = (id: string) => {
-    console.log("Action button clicked for row:", id);
+  const handleEditClick = (id: string) => {
     router.push(`/admin/prices/${id}`);
+  };
+
+  const handleDeleteClick = async () => {
+    if (deleteId) {
+      try {
+        await deletePrice(deleteId);
+        setIsDrawerOpen(false); // Close the drawer
+        refreshPrices(); // Refresh the list after deletion
+      } catch (error) {
+        console.error("Error deleting price:", error);
+      }
+    }
+  };
+
+  const openDeleteDrawer = (id: string) => {
+    setDeleteId(id); // Set the ID of the item to delete
+    setIsDrawerOpen(true); // Open the drawer
   };
 
   return (
@@ -42,10 +76,16 @@ const PricesComponent = () => {
           Precios
         </h1>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/admin/prices/bulk")}
+          >
             <Sheet />
           </Button>
-          <Button variant="outline">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/admin/prices/new")}
+          >
             <Plus />
           </Button>
         </div>
@@ -77,7 +117,7 @@ const PricesComponent = () => {
                   {price.smallZone ? "Sí" : "No"}
                 </td>
 
-                {/* Action button (animated) */}
+                {/* Action buttons (animated) */}
                 <AnimatePresence>
                   {selectedRow === price.id && (
                     <motion.td
@@ -91,6 +131,7 @@ const PricesComponent = () => {
                       <Button
                         size="sm"
                         className="bg-blue-600 h-full rounded-none px-6"
+                        onClick={() => handleEditClick(price.id)}
                       >
                         <Edit />
                       </Button>
@@ -98,7 +139,7 @@ const PricesComponent = () => {
                         variant="destructive"
                         size="sm"
                         className="rounded-none h-full px-6"
-                        onClick={() => handleActionClick(price.id)}
+                        onClick={() => openDeleteDrawer(price.id)} // Open the drawer to confirm deletion
                       >
                         <Trash2 />
                       </Button>
@@ -110,6 +151,35 @@ const PricesComponent = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Drawer for delete confirmation */}
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerTrigger />
+        <DrawerContent className="h-[30vh]">
+          <DrawerHeader>
+            <DrawerTitle>
+              Estás seguro que querés borrar este registro?
+            </DrawerTitle>
+            <DrawerDescription>
+              Esta acción no se puede deshacer.
+            </DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button
+              onClick={handleDeleteClick}
+              variant="destructive"
+              className="w-full"
+            >
+              Borrar
+            </Button>
+            <DrawerClose>
+              <Button variant="outline" className="w-full">
+                Cancelar
+              </Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };

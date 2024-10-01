@@ -82,3 +82,23 @@ export async function GET(req: Request) {
     return new NextResponse("Internal server error", { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return new NextResponse("ID es requerido", { status: 400 });
+    }
+
+    await db.prices.delete({
+      where: { id },
+    });
+
+    return new NextResponse("Registro eliminado exitosamente", { status: 200 });
+  } catch (error) {
+    console.error("[PRICES_DELETE]", error);
+    return new NextResponse("Error interno del servidor", { status: 500 });
+  }
+}
