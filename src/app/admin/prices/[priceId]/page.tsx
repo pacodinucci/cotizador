@@ -8,6 +8,8 @@ interface PriceIdPageProps {
   };
 }
 
+export const revalidate = 0; // Esto desactiva el caché desde el servidor.
+
 const PriceIdPage = async ({ params }: PriceIdPageProps) => {
   const price = await db.prices.findFirst({
     where: {

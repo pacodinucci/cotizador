@@ -35,6 +35,8 @@ export async function PATCH(
     const { priceId } = params;
     const body = await req.json();
 
+    console.log("BODY -> ", body);
+
     if (!priceId) {
       return new NextResponse("Invalid ID", { status: 400 });
     }
@@ -50,16 +52,21 @@ export async function PATCH(
     const updatedPrice = await db.prices.update({
       where: { id: priceId },
       data: {
-        title: body.title || existingPrice.title,
-        code: body.code || existingPrice.code,
-        zone: body.zone || existingPrice.zone,
-        price: body.price !== undefined ? body.price : existingPrice.price,
+        title: body.prices[0].title || existingPrice.title,
+        code: body.prices[0].code || existingPrice.code,
+        zone: body.prices[0].zone || existingPrice.zone,
+        price:
+          body.prices[0].price !== undefined
+            ? body.prices[0].price
+            : existingPrice.price,
         smallZone:
-          body.smallZone !== undefined
+          body.prices[0].smallZone !== undefined
             ? body.smallZone
             : existingPrice.smallZone,
       },
     });
+
+    console.log(updatedPrice);
 
     return NextResponse.json(updatedPrice);
   } catch (error) {

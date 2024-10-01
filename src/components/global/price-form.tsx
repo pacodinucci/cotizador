@@ -38,7 +38,7 @@ const formSchema = z.object({
   zone: z.string().min(1, {
     message: "Debe elegir un sector.",
   }),
-  price: z.string().min(1, {
+  price: z.number().min(1, {
     message: "El precio es requerido.",
   }),
   code: z.string().min(3, {
@@ -59,7 +59,7 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
     : {
         title: "",
         zone: "",
-        price: "",
+        price: 0,
         code: "",
         smallZone: false,
       };
@@ -176,7 +176,11 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
               <FormItem>
                 <FormLabel>Precio</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" />
+                  <Input
+                    {...field}
+                    type="number"
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  />
                 </FormControl>
               </FormItem>
             )}
