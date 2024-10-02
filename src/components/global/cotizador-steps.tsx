@@ -57,7 +57,6 @@ const CotizadorSteps = () => {
   }, [selectedTreatments]);
 
   useEffect(() => {
-    // Calcula el precio con tarjeta basado en los tratamientos seleccionados y el descuento
     let totalCardPrice = 0;
 
     selectedTreatments.forEach((treatment) => {
@@ -67,15 +66,12 @@ const CotizadorSteps = () => {
       }
     });
 
-    // Calcula el descuento total (multizona + grupal)
     const descuentoTotal = descuento + descuentoGrupal;
     const finalCardPrice =
       totalCardPrice - totalCardPrice * (descuentoTotal / 100);
 
-    // Establece el precio con tarjeta
     setOneSessionCardPrice(finalCardPrice);
 
-    // Establece el precio en efectivo con un 20% de descuento adicional
     const finalCashPrice = finalCardPrice - finalCardPrice * 0.2;
     setOneSessionCashPrice(finalCashPrice);
   }, [selectedTreatments, descuento, descuentoGrupal, prices]);
@@ -101,18 +97,15 @@ const CotizadorSteps = () => {
       return;
     }
 
-    // Formatear las zonas seleccionadas
     const selectedZonesMessage = selectedTreatments
       .map((treatment) => `- ${treatment}`)
       .join("\n");
 
-    // Descuento grupal, si aplica
     const groupDiscountMessage =
       descuentoGrupal > 0
         ? `🎉 Descuento grupal aplicado: ${descuentoGrupal}%`
         : "Sin descuento grupal";
 
-    // Formatear los precios con emojis
     const oneSessionCashMessage = oneSessionCashPrice
       ? `💵 Sesión en efectivo: ${formatNumber(oneSessionCashPrice)}`
       : "💵 Precio por una sesión en efectivo: $0";
@@ -129,7 +122,6 @@ const CotizadorSteps = () => {
       ? `💳 Seis sesiones con tarjeta: ${formatNumber(oneSessionCardPrice * 6)}`
       : "💳 Precio por seis sesiones con tarjeta: $0";
 
-    // Crear el mensaje completo para WhatsApp
     const fullMessage = `
   Hola! 👋 Me gustaría consultar por el siguiente tratamiento 😊\n
   Zonas seleccionadas:
@@ -147,19 +139,15 @@ const CotizadorSteps = () => {
   ${sixSessionsCardMessage}
     `;
 
-    // Codificar el mensaje
     const encodedMessage = encodeURIComponent(fullMessage);
 
-    // Detectar si el usuario está en móvil o en escritorio
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    // Formatear la URL de WhatsApp dependiendo del dispositivo
-    const phoneNumber = "5491143994339"; // Tu número de WhatsApp con el código de país
+    const phoneNumber = "5491143994339";
     const whatsappUrl = isMobile
       ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`
       : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
 
-    // Abrir la URL de WhatsApp
     window.open(whatsappUrl, "_blank");
   };
 
