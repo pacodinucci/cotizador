@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Component, Edit, Plus, Sheet, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Plus, Sheet, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePriceStore } from "@/lib/store";
-import { getPrices } from "../../../actions/get-prices";
+import { useComboStore } from "@/lib/store";
+import { getCombos } from "../../../actions/get-combos";
 import { Separator } from "../ui/separator";
 import { oswald } from "@/lib/fonts";
 import { Button } from "../ui/button";
-import { deletePrice } from "../../../actions/delete-price";
+import { deleteCombo } from "../../../actions/delete-combo";
 import {
   Drawer,
   DrawerContent,
@@ -19,45 +19,45 @@ import {
   DrawerDescription,
   DrawerClose,
   DrawerTrigger,
-} from "../ui/drawer"; // Import your Drawer component
+} from "../ui/drawer";
 
-const PricesComponent = () => {
+const CombosComponent = () => {
   const router = useRouter();
-  const { prices, setPrices } = usePriceStore();
-  const [selectedRow, setSelectedRow] = useState<string | null>(null); // Track the selected row
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Control the drawer visibility
-  const [deleteId, setDeleteId] = useState<string | null>(null); // Track which item to delete
+  const { combos, setCombos } = useComboStore();
+  const [selectedRow, setSelectedRow] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const refreshPrices = async () => {
-    const updatedPrices = await getPrices();
-    setPrices(updatedPrices);
+  const refreshCombos = async () => {
+    const updatedCombos = await getCombos();
+    setCombos(updatedCombos);
   };
 
-  const fetchPrices = async () => {
-    const pricesData = await getPrices();
-    setPrices(pricesData);
+  const fetchCombos = async () => {
+    const combosData = await getCombos();
+    setCombos(combosData);
   };
 
   useEffect(() => {
-    fetchPrices();
-  }, [setPrices]);
+    fetchCombos();
+  }, [setCombos]);
 
   const handleRowClick = (id: string) => {
     setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));
   };
 
   const handleEditClick = (id: string) => {
-    router.push(`/admin/prices/${id}`);
+    router.push(`/admin/combos/${id}`);
   };
 
   const handleDeleteClick = async () => {
     if (deleteId) {
       try {
-        await deletePrice(deleteId);
+        await deleteCombo(deleteId); // Use the delete combo action
         setIsDrawerOpen(false); // Close the drawer
-        refreshPrices(); // Refresh the list after deletion
+        refreshCombos(); // Refresh the list after deletion
       } catch (error) {
-        console.error("Error deleting price:", error);
+        console.error("Error deleting combo:", error);
       }
     }
   };
@@ -73,24 +73,15 @@ const PricesComponent = () => {
         <h1
           className={`${oswald.className} uppercase text-3xl px-6 text-neutral-700`}
         >
-          Precios
+          Combos
         </h1>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => router.push("/admin/combos")}
-          >
-            <Component />
+          <Button variant="outline" onClick={() => router.push("/admin")}>
+            <ArrowLeft />
           </Button>
           <Button
             variant="outline"
-            onClick={() => router.push("/admin/prices/bulk")}
-          >
-            <Sheet />
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => router.push("/admin/prices/new")}
+            onClick={() => router.push("/admin/combos/new")}
           >
             <Plus />
           </Button>
@@ -101,31 +92,24 @@ const PricesComponent = () => {
         <table className="min-h-full table-auto border-collapse w-full">
           <thead>
             <tr className="bg-gray-100">
-              <th className="px-4 py-2 border">Zona</th>
-              <th className="px-4 py-2 border">Código</th>
-              <th className="px-4 py-2 border">Sector</th>
-              <th className="px-4 py-2 border">Precio</th>
-              <th className="px-4 py-2 border">Zona Chica</th>
+              <th className="px-4 py-2 border w-[40%]">Combo</th>
+              <th className="px-4 py-2 border w-[30%]">Zonas Ch</th>
+              <th className="px-4 py-2 border w-[30%]">Precio</th>
             </tr>
           </thead>
           <tbody>
-            {prices.map((price, index) => (
+            {combos.map((combo, index) => (
               <tr
                 key={index}
                 className="text-center relative group"
-                onClick={() => handleRowClick(price.id)}
+                onClick={() => handleRowClick(combo.id)}
               >
-                <td className="px-4 py-4 border">{price.title}</td>
-                <td className="px-4 py-4 border">{price.code}</td>
-                <td className="px-4 py-4 border">{price.zone}</td>
-                <td className="px-4 py-4 border">{price.price}</td>
-                <td className="px-4 py-4 border">
-                  {price.smallZone ? "Sí" : "No"}
-                </td>
+                <td className="px-4 py-4 border w-[40%]">{combo.title}</td>
+                <td className="px-4 py-4 border w-[30%]">{combo.smallZones}</td>
+                <td className="px-4 py-4 border w-[30%]">{combo.price}</td>
 
-                {/* Action buttons (animated) */}
                 <AnimatePresence>
-                  {selectedRow === price.id && (
+                  {selectedRow === combo.id && (
                     <motion.td
                       className="absolute left-0 top-0 h-full flex items-center justify-center bg-white text-white z-10"
                       initial={{ x: "-100%", opacity: 0 }}
@@ -137,7 +121,7 @@ const PricesComponent = () => {
                       <Button
                         size="sm"
                         className="bg-blue-600 h-full rounded-none px-6"
-                        onClick={() => handleEditClick(price.id)}
+                        onClick={() => handleEditClick(combo.id)}
                       >
                         <Edit />
                       </Button>
@@ -145,7 +129,7 @@ const PricesComponent = () => {
                         variant="destructive"
                         size="sm"
                         className="rounded-none h-full px-6"
-                        onClick={() => openDeleteDrawer(price.id)} // Open the drawer to confirm deletion
+                        onClick={() => openDeleteDrawer(combo.id)} // Open the drawer to confirm deletion
                       >
                         <Trash2 />
                       </Button>
@@ -158,7 +142,6 @@ const PricesComponent = () => {
         </table>
       </div>
 
-      {/* Drawer for delete confirmation */}
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerTrigger />
         <DrawerContent className="h-[30vh]">
@@ -190,4 +173,4 @@ const PricesComponent = () => {
   );
 };
 
-export default PricesComponent;
+export default CombosComponent;

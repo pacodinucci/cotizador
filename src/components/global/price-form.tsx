@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Prices } from "@prisma/client";
+import { Zone } from "@prisma/client";
 import * as z from "zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -28,7 +28,7 @@ import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
 
 interface PriceFormProps {
-  initialData: Prices | null;
+  initialData: Zone | null;
 }
 
 const formSchema = z.object({

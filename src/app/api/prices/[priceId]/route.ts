@@ -12,7 +12,7 @@ export async function GET(
       return new NextResponse("Invalid ID", { status: 400 });
     }
 
-    const price = await db.prices.findFirst({
+    const price = await db.zone.findFirst({
       where: { id: priceId },
     });
 
@@ -41,7 +41,7 @@ export async function PATCH(
       return new NextResponse("Invalid ID", { status: 400 });
     }
 
-    const existingPrice = await db.prices.findFirst({
+    const existingPrice = await db.zone.findFirst({
       where: { id: priceId },
     });
 
@@ -49,7 +49,7 @@ export async function PATCH(
       return new NextResponse("Price not found", { status: 404 });
     }
 
-    const updatedPrice = await db.prices.update({
+    const updatedPrice = await db.zone.update({
       where: { id: priceId },
       data: {
         title: body.prices[0].title || existingPrice.title,

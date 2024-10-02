@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Prices {
+model Zone {
   id        String   @id @default(uuid())
   code      String   @unique
   title     String
@@ -19,4 +19,17 @@ model Prices {
   price     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  combos Combo[] @relation("ComboZones")
+}
+
+model Combo {
+  id         String   @id @default(uuid())
+  title      String
+  price      Int
+  smallZones Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  zones Zone[] @relation("ComboZones")
 }

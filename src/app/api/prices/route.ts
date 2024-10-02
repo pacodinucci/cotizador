@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     const codes = prices.map((price: Price) => price.code);
 
     // Obtener los registros que ya existen en la base de datos basados en los códigos
-    const existingPrices = await db.prices.findMany({
+    const existingPrices = await db.zone.findMany({
       where: {
         code: {
           in: codes,
@@ -46,14 +46,14 @@ export async function POST(req: Request) {
 
     // Crear nuevos precios
     if (newPrices.length > 0) {
-      await db.prices.createMany({
+      await db.zone.createMany({
         data: newPrices,
       });
     }
 
     // Actualizar los precios existentes
     for (const price of updatedPrices) {
-      await db.prices.update({
+      await db.zone.update({
         where: { code: price.code },
         data: price,
       });
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const prices = await db.prices.findMany();
+    const prices = await db.zone.findMany();
     return NextResponse.json(prices);
   } catch (error) {
     console.error("[PRICES_GET]", error);
@@ -92,7 +92,7 @@ export async function DELETE(req: Request) {
       return new NextResponse("ID es requerido", { status: 400 });
     }
 
-    await db.prices.delete({
+    await db.zone.delete({
       where: { id },
     });
 
