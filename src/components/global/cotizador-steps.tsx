@@ -33,6 +33,7 @@ const CotizadorSteps = () => {
   const [sixSessionsCardPrice, setSixSessionsCardPrice] = useState<
     number | null
   >(null);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -92,22 +93,92 @@ const CotizadorSteps = () => {
   const isSelected = (treatment: string) =>
     selectedTreatments.includes(treatment);
 
+  const handleWhatsAppSend = () => {
+    if (selectedTreatments.length === 0) {
+      alert(
+        "Por favor, selecciona al menos una zona para enviar el presupuesto."
+      );
+      return;
+    }
+
+    // Formatear las zonas seleccionadas
+    const selectedZonesMessage = selectedTreatments
+      .map((treatment) => `- ${treatment}`)
+      .join("\n");
+
+    // Descuento grupal, si aplica
+    const groupDiscountMessage =
+      descuentoGrupal > 0
+        ? `🎉 Descuento grupal aplicado: ${descuentoGrupal}%`
+        : "Sin descuento grupal";
+
+    // Formatear los precios con emojis
+    const oneSessionCashMessage = oneSessionCashPrice
+      ? `💵 Sesión en efectivo: ${formatNumber(oneSessionCashPrice)}`
+      : "💵 Precio por una sesión en efectivo: $0";
+
+    const oneSessionCardMessage = oneSessionCardPrice
+      ? `💳 Sesión con tarjeta: ${formatNumber(oneSessionCardPrice)}`
+      : "💳 Precio por una sesión con tarjeta: $0";
+
+    const sixSessionsCashMessage = oneSessionCashPrice
+      ? `💵 Seis sesiones en efectivo: ${formatNumber(oneSessionCashPrice * 6)}`
+      : "💵 Precio por seis sesiones en efectivo: $0";
+
+    const sixSessionsCardMessage = oneSessionCardPrice
+      ? `💳 Seis sesiones con tarjeta: ${formatNumber(oneSessionCardPrice * 6)}`
+      : "💳 Precio por seis sesiones con tarjeta: $0";
+
+    // Crear el mensaje completo para WhatsApp
+    const fullMessage = `
+  Hola! 👋 Me gustaría consultar por el siguiente tratamiento 😊\n
+  Zonas seleccionadas:
+
+  ${selectedZonesMessage}
+  
+  ${groupDiscountMessage}
+  
+  💸 Presupuesto
+
+  ${oneSessionCashMessage}
+  ${oneSessionCardMessage}
+  
+  ${sixSessionsCashMessage}
+  ${sixSessionsCardMessage}
+    `;
+
+    // Codificar el mensaje
+    const encodedMessage = encodeURIComponent(fullMessage);
+
+    // Detectar si el usuario está en móvil o en escritorio
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    // Formatear la URL de WhatsApp dependiendo del dispositivo
+    const phoneNumber = "5491143994339"; // Tu número de WhatsApp con el código de país
+    const whatsappUrl = isMobile
+      ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`
+      : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+
+    // Abrir la URL de WhatsApp
+    window.open(whatsappUrl, "_blank");
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen px-4 flex flex-col gap-y-4 py-8">
+    <div className="bg-gray-100 text-neutral-700 antialiased min-h-screen px-4 flex flex-col gap-y-4 py-8">
       <div
         className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 py-1 flex flex-col gap-y-4`}
       >
         <div className="flex flex-col">
           <h3 className="font-light flex items-center">
             1er paso <Dot className="text-[#EAC45E] -mx-2" size={40} />
-            <span className="font-medium">Selecciona las zonas</span>
+            <span className="font-semibold">Selecciona las zonas</span>
           </h3>
-          <p className="text-neutral-500 text-sm -mt-3">
+          <p className="text-neutral-500 text-sm -mt-1">
             Cuantas más zonas mayor es el descuento!
           </p>
         </div>
         <div>
-          <Select>
+          <Select open={isSelectOpen} onOpenChange={setIsSelectOpen}>
             <SelectTrigger className="rounded-none outline-none focus:outline-none focus-visible:outline-none active:outline-none">
               <SelectValue
                 placeholder={
@@ -117,9 +188,11 @@ const CotizadorSteps = () => {
                 }
               />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="relative pb-10">
               {/* Sección Alta */}
-              <div className="px-8 py-2 font-bold text-gray-600">Zona Alta</div>
+              <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
+                Zonas Altas
+              </div>
               <Separator className="mb-1" />
               {prices
                 .filter((price) => price.zone === "Alta")
@@ -136,8 +209,8 @@ const CotizadorSteps = () => {
                 ))}
 
               {/* Sección Media */}
-              <div className="px-8 py-2 font-bold text-gray-600">
-                Zona Media
+              <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
+                Zonas Medias
               </div>
               <Separator className="mb-1" />
               {prices
@@ -155,7 +228,9 @@ const CotizadorSteps = () => {
                 ))}
 
               {/* Sección Baja */}
-              <div className="px-8 py-2 font-bold text-gray-600">Zona Baja</div>
+              <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
+                Zonas Bajas
+              </div>
               <Separator className="mb-1" />
               {prices
                 .filter((price) => price.zone === "Baja")
@@ -170,18 +245,26 @@ const CotizadorSteps = () => {
                     {price.title}
                   </div>
                 ))}
+              <div
+                className="fixed bottom-0 left-0 bg-neutral-900 text-white text-center py-2 w-full uppercase cursor-pointer"
+                onClick={() => setIsSelectOpen(false)}
+              >
+                Listo!
+              </div>
             </SelectContent>
           </Select>
         </div>
 
         {/* Mostrar tratamientos seleccionados con viñeta */}
         {selectedTreatments.length > 0 && (
-          <div className="mt-4">
-            <ul className="list-none mt-2 space-y-1">
+          <div className="mb-4">
+            <ul className="list-none mt-2">
               {selectedTreatments.map((treatment, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <Dot className="text-[#EAC45E]" size={40} />
-                  <span className="text-gray-800 font-medium">{treatment}</span>
+                  <span className="text-gray-800 font-medium text-sm">
+                    {treatment}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -194,26 +277,26 @@ const CotizadorSteps = () => {
         <div className="flex flex-col">
           <h3 className="font-light flex items-center">
             2do paso <Dot className="text-[#EAC45E] -mx-2" size={40} />
-            <span className="font-medium">Descuento grupal</span>
+            <span className="font-semibold">Descuento grupal</span>
           </h3>
-          <p className="text-neutral-500 text-sm -mt-3">
+          <p className="text-neutral-500 text-sm -mt-1">
             ¿Vendrías sola/o o con alguien mas?
           </p>
         </div>
         <div>
           <Select onValueChange={(value) => setDescuentoGrupal(Number(value))}>
-            <SelectTrigger className="rounded-none">
-              <SelectValue placeholder="Elegí una opción" />
+            <SelectTrigger className="rounded-none" defaultValue="0">
+              <SelectValue placeholder="Individual ● 0%" />
             </SelectTrigger>
             <SelectContent className="rounded-none">
               <SelectItem value="0" className="text-base">
-                Sola/o (0%)
+                Individual ● 0%
               </SelectItem>
               <SelectItem value="5" className="text-base">
-                2 personas (5% off c/u)
+                Somos 2 ● 5% off
               </SelectItem>
               <SelectItem value="10" className="text-base">
-                3 personas o mas (10% off c/u)
+                Somos 3 o más ● 10% off
               </SelectItem>
             </SelectContent>
           </Select>
@@ -225,11 +308,10 @@ const CotizadorSteps = () => {
         <div className="flex flex-col">
           <h3 className="font-light flex items-center">
             3er paso <Dot className="text-[#EAC45E] -mx-2" size={40} />
-            <span className="font-medium">Verifica tu presupuesto</span>
+            <span className="font-semibold">Verifica tu presupuesto</span>
           </h3>
-          <p className="text-neutral-500 text-sm -mt-3">
-            Podés armar cuantas opciones de presupuestos necesites, solo cambia
-            las zonas y listo!
+          <p className="text-neutral-500 text-sm -mt-1">
+            Arma cuantos presupuestos necesites, solo cambia las zonas y listo!
           </p>
         </div>
         <div className="py-2">
@@ -238,11 +320,11 @@ const CotizadorSteps = () => {
             <div className="h-10 font-medium flex justify-center items-center pl-8">
               Descuentos
             </div>
-            <div className="h-10 flex justify-end items-center text-sm text-right">
+            <div className="h-10 flex justify-end items-center font-medium text-right">
               Aplicados
             </div>
-            <div className="h-10 flex items-center justify-end pr-1 text-sm text-right">
-              % Descuento
+            <div className="h-10 flex items-center justify-center pr-1 text-base font-medium">
+              %
             </div>
           </div>
 
@@ -250,7 +332,7 @@ const CotizadorSteps = () => {
           <div className="grid grid-cols-[45%_25%_30%] grid-rows-2">
             {/* Ajusta el gap si necesitas más espacio entre celdas */}
             {/* Primera fila con borde inferior */}
-            <div className="h-12 col-span-1 border-b border-neutral-500 flex items-center whitespace-nowrap text-xs font-medium">
+            <div className="h-12 col-span-1 border-b border-neutral-500 flex items-center whitespace-nowrap text-base font-medium">
               <Dot className="text-[#EAC45E] -mx-2 shrink-0" size={40} />
               Multizona
             </div>
@@ -264,11 +346,12 @@ const CotizadorSteps = () => {
             </div>
 
             {/* Segunda fila */}
-            <div className="h-12 col-span-1 flex items-center whitespace-nowrap text-xs font-medium">
+            <div className="h-12 col-span-1 flex items-center whitespace-nowrap text-base font-medium">
               <Dot className="text-[#EAC45E] -mx-2" size={40} />
               Grupal
             </div>
             <div className="h-12 col-span-1 flex justify-center items-center">
+              {/* TODO: Contenido */}
               Celda 5
             </div>
             <div className="h-12 col-span-1 border-l border-neutral-500 flex justify-center items-center font-semibold text-[#EAC45E]">
@@ -279,18 +362,18 @@ const CotizadorSteps = () => {
         <div>
           <div>
             <div className="flex flex-col relative h-[100px]">
-              <span className="absolute left-8 bottom-0 text-8xl font-bold text-black pr-2 z-10">
+              {/* <span className="absolute left-8 md:left-40 bottom-0 text-8xl font-bold text-black pr-2 z-10">
                 1
-              </span>
+              </span> */}
               <div
-                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4`}
+                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center font-semibold tracking-wider bg-gradient-to-r from-[#f5de89] via-[#eccb52] to-[#cfa14c] text-white py-3 px-3`}
               >
                 SESIÓN INDIVIDUAL
               </div>
             </div>
             <div>
               <div>
-                <div className="text-center font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
                   {oneSessionCashPrice
                     ? formatNumber(oneSessionCashPrice)
                     : "$0"}
@@ -300,31 +383,32 @@ const CotizadorSteps = () => {
                 </div>
               </div>
               <div>
-                <div className="text-center font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
                   {oneSessionCardPrice
                     ? formatNumber(oneSessionCardPrice)
                     : "$0"}
                 </div>
                 <div className="bg-gray-200 p-2 text-center">
-                  Débito o crédito hasta en 6 cuotas sin interés
+                  <p>Débito o crédito</p>
+                  <p>Hasta en 6 cuotas sin interés</p>
                 </div>
               </div>
             </div>
           </div>
           <div>
             <div className="flex flex-col relative h-[100px]">
-              <span className="absolute left-8 bottom-0 text-8xl font-bold text-black pr-2 z-10">
+              {/* <span className="absolute left-8 md:left-40 bottom-0 text-8xl font-bold text-black pr-2 z-10">
                 6
-              </span>
+              </span> */}
               <div
-                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white py-2 px-4 pl-10`}
+                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center font-semibold tracking-wider bg-gradient-to-r from-[#f5de89] via-[#eccb52] to-[#cfa14c] text-white py-3 px-3`}
               >
                 PACK DE SESIONES
               </div>
             </div>
             <div>
               <div>
-                <div className="text-center font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
                   {oneSessionCashPrice
                     ? formatNumber(oneSessionCashPrice * 6)
                     : "$0"}
@@ -334,32 +418,14 @@ const CotizadorSteps = () => {
                 </div>
               </div>
               <div>
-                <div className="text-center font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
                   {oneSessionCardPrice
                     ? formatNumber(oneSessionCardPrice * 6)
                     : "$0"}
                 </div>
                 <div className="bg-gray-200 p-2 text-center">
-                  Débito o crédito hasta en 6 cuotas sin interés
-                </div>
-              </div>
-              <div className="flex flex-col gap-2 mt-4">
-                <div className="flex gap-2 items-center">
-                  <Dot className="text-[#EAC45E] shrink-0" size={40} />
-                  <p className="">Presupuesto válido por 10 días.</p>
-                </div>
-                <div className="flex gap-2">
-                  <Dot className="text-[#EAC45E] shrink-0" size={40} />
-                  <p className="pt-2">
-                    Para confirmar los turnos es necesaria una seña del 30%
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Dot className="text-[#EAC45E] shrink-0" size={40} />
-                  <p className="pt-2">
-                    Para descuento grupal los integrantes deberáan contratar en
-                    forma simultánea.
-                  </p>
+                  <p>Débito o crédito</p>
+                  <p>Hasta en 6 cuotas sin interés</p>
                 </div>
               </div>
             </div>
@@ -372,13 +438,15 @@ const CotizadorSteps = () => {
         <div className="flex flex-col">
           <h3 className="font-light flex items-center">
             4to paso <Dot className="text-[#EAC45E] -mx-2" size={40} />
-            <span className="font-medium">Consultar por este presupuesto</span>
+            <span className="font-semibold">Consultános!</span>
           </h3>
-          <p className="text-neutral-500 text-sm">
-            Selecciona el link a continuacion para enviarnos el presupuesto por
-            el cual queres consultar o tomar un turno
+          <p className="text-neutral-500 text-sm text-left">
+            Envianos el presupuesto por el cual querés consultar
           </p>
-          <div className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600 text-white text-center font-semibold shadow-md rounded-full w-1/2 mx-auto my-4 py-4 flex items-center gap-2 justify-center text-xl">
+          <div
+            className="bg-gradient-to-r from-[#f5de89] via-[#eccb52] to-[#cfa14c] text-white text-center font-semibold md:text-base shadow-md rounded-full w-1/2 md:w-1/4 mx-auto my-8 py-3 md:py-2 flex items-center gap-2 justify-center text-xl cursor-pointer"
+            onClick={handleWhatsAppSend}
+          >
             Enviar
             <Image
               src="/whatsapp.svg"
@@ -388,6 +456,29 @@ const CotizadorSteps = () => {
             />
           </div>
         </div>
+      </div>
+      <div className="flex flex-col gap-2 mt-4">
+        <div className="flex gap-2 items-center">
+          {/* <Dot className="text-[#EAC45E] shrink-0" size={40} /> */}
+          <p className="leading-8 tracking-wide px-4 text-justify text-sm">
+            Presupuesto válido por 10 días / Para confirmar los turnos es
+            necesaria una seña del 30% / Para descuento grupal los integrantes
+            deberán contratar en forma simultánea.
+          </p>
+        </div>
+        {/* <div className="flex gap-2"> */}
+        {/* <Dot className="text-[#EAC45E] shrink-0" size={40} /> */}
+        {/* <p className="pt-2"> */}
+        {/* Para confirmar los turnos es necesaria una seña del 30% */}
+        {/* </p> */}
+        {/* </div> */}
+        {/* <div className="flex gap-2"> */}
+        {/* <Dot className="text-[#EAC45E] shrink-0" size={40} /> */}
+        {/* <p className="pt-2"> */}
+        {/* Para descuento grupal los integrantes deberáan contratar en forma
+            simultánea.
+          </p> */}
+        {/* </div> */}
       </div>
     </div>
   );

@@ -3,13 +3,13 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <div className="relative bg-navbarImage bg-contain w-full h-[15vh] flex justify-center items-center shadow-md shadow-[#bcbcbc]">
+    <div className="relative bg-navbarImage bg-contain w-full h-[18vh] flex justify-center items-center shadow-lg shadow-[#bcbcbc]">
       <Image
-        src="/logow.png"
+        src="/logow2.png"
         alt="logo clinica w"
-        width={1000}
+        width={250}
         height={0}
-        className="w-[1000px] md:w-[600px]"
+        className="md:w-[320px]"
       />
     </div>
   );

@@ -5,7 +5,7 @@ type Props = {};
 
 const Home = (props: Props) => {
   return (
-    <div className="">
+    <div className="md:px-96 bg-gray-100">
       {/* <Cotizador /> */}
       <CotizadorSteps />
     </div>
