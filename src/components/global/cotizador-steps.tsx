@@ -234,7 +234,7 @@ const CotizadorSteps = () => {
                   </div>
                 ))}
               <div
-                className="fixed bottom-0 left-0 bg-neutral-900 text-white text-center py-2 w-full uppercase cursor-pointer"
+                className="fixed bottom-0 left-0 bg-neutral-900 text-red-500 text-center py-2 w-full uppercase cursor-pointer"
                 onClick={() => setIsSelectOpen(false)}
               >
                 Listo!
