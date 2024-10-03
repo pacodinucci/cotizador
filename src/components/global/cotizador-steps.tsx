@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { montserrat } from "@/lib/fonts";
 import { Dot } from "lucide-react";
 import {
@@ -34,6 +34,7 @@ const CotizadorSteps = () => {
     number | null
   >(null);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -151,6 +152,23 @@ const CotizadorSteps = () => {
     window.open(whatsappUrl, "_blank");
   };
 
+  const handleScrollBy = () => {
+    if (window.innerWidth < 768) {
+      window.scrollBy({
+        top: window.innerHeight * 0.18,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleSelectOpenChange = (open: boolean) => {
+    setIsSelectOpen(open);
+    if (open && !hasScrolled) {
+      handleScrollBy();
+      setHasScrolled(true);
+    }
+  };
+
   return (
     <div className="bg-gray-100 text-neutral-700 antialiased min-h-screen px-4 flex flex-col gap-y-4 py-8">
       <div
@@ -166,7 +184,7 @@ const CotizadorSteps = () => {
           </p>
         </div>
         <div>
-          <Select open={isSelectOpen} onOpenChange={setIsSelectOpen}>
+          <Select open={isSelectOpen} onOpenChange={handleSelectOpenChange}>
             <SelectTrigger className="rounded-none outline-none focus:outline-none focus-visible:outline-none active:outline-none">
               <SelectValue
                 placeholder={
