@@ -176,7 +176,7 @@ const CotizadorSteps = () => {
                 }
               />
             </SelectTrigger>
-            <SelectContent className="relative pb-10">
+            <SelectContent className="relative">
               {/* Sección Alta */}
               <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
                 Zonas Altas
@@ -222,19 +222,19 @@ const CotizadorSteps = () => {
               <Separator className="mb-1" />
               {prices
                 .filter((price) => price.zone === "Baja")
-                .map((price, index) => (
+                .map((price, index, array) => (
                   <div
                     key={index}
                     onClick={() => handleSelectTreatment(price.title)}
                     className={`cursor-pointer px-8 py-2 ${
                       isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
-                    }`}
+                    } ${index === array.length - 1 ? "mb-10" : ""}`}
                   >
                     {price.title}
                   </div>
                 ))}
               <div
-                className="fixed bottom-0 left-0 bg-neutral-900 text-red-500 text-center py-2 w-full uppercase cursor-pointer"
+                className="fixed bottom-0 left-0 bg-neutral-900 text-white text-center py-2 w-full uppercase cursor-pointer z-50"
                 onClick={() => setIsSelectOpen(false)}
               >
                 Listo!
