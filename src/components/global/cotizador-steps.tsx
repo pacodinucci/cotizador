@@ -15,8 +15,10 @@ import { usePriceStore } from "@/lib/store";
 import { Separator } from "../ui/separator";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 const CotizadorSteps = () => {
+  const searchParams = useSearchParams();
   const { prices, setPrices } = usePriceStore();
   const [selectedTreatments, setSelectedTreatments] = useState<string[]>([]);
   const [descuento, setDescuento] = useState<number>(0);
@@ -35,6 +37,8 @@ const CotizadorSteps = () => {
   >(null);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+
+  const whnumber = searchParams.get("whnumber");
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -144,7 +148,7 @@ const CotizadorSteps = () => {
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    const phoneNumber = "5491143994339";
+    const phoneNumber = whnumber;
     const whatsappUrl = isMobile
       ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`
       : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
