@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import { montserrat } from "@/lib/fonts";
 import { Dot } from "lucide-react";
 import {
@@ -16,6 +16,14 @@ import { Separator } from "../ui/separator";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+
+const CotizadorStepsWrapper = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CotizadorSteps />
+    </Suspense>
+  );
+};
 
 const CotizadorSteps = () => {
   const searchParams = useSearchParams();
@@ -481,22 +489,9 @@ const CotizadorSteps = () => {
             deberán contratar en forma simultánea.
           </p>
         </div>
-        {/* <div className="flex gap-2"> */}
-        {/* <Dot className="text-[#EAC45E] shrink-0" size={40} /> */}
-        {/* <p className="pt-2"> */}
-        {/* Para confirmar los turnos es necesaria una seña del 30% */}
-        {/* </p> */}
-        {/* </div> */}
-        {/* <div className="flex gap-2"> */}
-        {/* <Dot className="text-[#EAC45E] shrink-0" size={40} /> */}
-        {/* <p className="pt-2"> */}
-        {/* Para descuento grupal los integrantes deberáan contratar en forma
-            simultánea.
-          </p> */}
-        {/* </div> */}
       </div>
     </div>
   );
 };
 
-export default CotizadorSteps;
+export default CotizadorStepsWrapper;
