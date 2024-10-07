@@ -187,7 +187,7 @@ const CotizadorSteps = () => {
   };
 
   return (
-    <div className="bg-gray-100 text-neutral-700 antialiased min-h-screen px-4 flex flex-col gap-y-4 py-8">
+    <div className="bg-gray-100 text-neutral-700 antialiased min-h-screen px-4 flex flex-col gap-y-4 py-8 no-select">
       <div
         className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 py-1 flex flex-col gap-y-4`}
       >
@@ -217,57 +217,60 @@ const CotizadorSteps = () => {
                 Zonas Altas
               </div>
               <Separator className="mb-1" />
-              {prices
-                .filter((price) => price.zone === "Alta")
-                .map((price, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleSelectTreatment(price.title)}
-                    className={`cursor-pointer px-8 py-2 ${
-                      isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
-                    }`}
-                  >
-                    {price.title}
-                  </div>
-                ))}
+              {prices &&
+                prices
+                  .filter((price) => price.zone === "Alta")
+                  .map((price, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSelectTreatment(price.title)}
+                      className={`cursor-pointer px-8 py-2 ${
+                        isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
+                      }`}
+                    >
+                      {price.title}
+                    </div>
+                  ))}
 
               {/* Sección Media */}
               <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
                 Zonas Medias
               </div>
               <Separator className="mb-1" />
-              {prices
-                .filter((price) => price.zone === "Media")
-                .map((price, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleSelectTreatment(price.title)}
-                    className={`cursor-pointer px-8 py-2 ${
-                      isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
-                    }`}
-                  >
-                    {price.title}
-                  </div>
-                ))}
+              {prices &&
+                prices
+                  .filter((price) => price.zone === "Media")
+                  .map((price, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSelectTreatment(price.title)}
+                      className={`cursor-pointer px-8 py-2 ${
+                        isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
+                      }`}
+                    >
+                      {price.title}
+                    </div>
+                  ))}
 
               {/* Sección Baja */}
               <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
                 Zonas Bajas
               </div>
               <Separator className="mb-1" />
-              {prices
-                .filter((price) => price.zone === "Baja")
-                .map((price, index, array) => (
-                  <div
-                    key={index}
-                    onClick={() => handleSelectTreatment(price.title)}
-                    className={`cursor-pointer px-8 py-2 ${
-                      isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
-                    } ${index === array.length - 1 ? "mb-10" : ""}`}
-                  >
-                    {price.title}
-                  </div>
-                ))}
+              {prices &&
+                prices
+                  .filter((price) => price.zone === "Baja")
+                  .map((price, index, array) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSelectTreatment(price.title)}
+                      className={`cursor-pointer px-8 py-2 ${
+                        isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
+                      } ${index === array.length - 1 ? "mb-10" : ""}`}
+                    >
+                      {price.title}
+                    </div>
+                  ))}
               <div
                 className="fixed bottom-0 left-0 bg-neutral-900 text-white text-center py-2 w-full uppercase cursor-pointer z-50"
                 onClick={() => setIsSelectOpen(false)}

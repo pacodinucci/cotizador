@@ -78,4 +78,8 @@
     width: 0;
     background: transparent;
   }
+
+  .no-select {
+    user-select: none;
+  }
 }
