@@ -148,7 +148,7 @@ const CotizadorSteps = () => {
   
   ${groupDiscountMessage}
   
-  💸 Presupuesto
+  ✨ Presupuesto 
 
   ${oneSessionCashMessage}
   ${oneSessionCardMessage}
