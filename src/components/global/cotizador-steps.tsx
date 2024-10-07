@@ -63,13 +63,13 @@ const CotizadorSteps = () => {
 
   useEffect(() => {
     if (selectedTreatments.length === 2) {
-      setDescuento(10);
+      setDescuento(5);
     } else if (selectedTreatments.length === 3) {
-      setDescuento(20);
+      setDescuento(10);
     } else if (selectedTreatments.length === 4) {
-      setDescuento(25);
+      setDescuento(15);
     } else if (selectedTreatments.length >= 5) {
-      setDescuento(30);
+      setDescuento(20);
     } else {
     }
   }, [selectedTreatments]);
