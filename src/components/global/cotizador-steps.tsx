@@ -46,7 +46,7 @@ const CotizadorSteps = () => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
 
-  const acceptedWhatsappNumbers = ["5491140614528", "5491155151695"];
+  const acceptedWhatsappNumbers = ["5491140614528", "5491155121695"];
   let whnumber = searchParams.get("whnumber");
 
   if (!whnumber || !acceptedWhatsappNumbers.includes(whnumber)) {
