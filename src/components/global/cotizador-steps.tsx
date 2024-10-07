@@ -38,7 +38,12 @@ const CotizadorSteps = () => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
 
-  const whnumber = searchParams.get("whnumber");
+  const acceptedWhatsappNumbers = ["5491140614528", "5491155151695"];
+  let whnumber = searchParams.get("whnumber");
+
+  if (!whnumber || !acceptedWhatsappNumbers.includes(whnumber)) {
+    whnumber = acceptedWhatsappNumbers[1];
+  }
 
   useEffect(() => {
     const fetchPrices = async () => {
