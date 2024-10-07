@@ -371,14 +371,14 @@ const CotizadorSteps = () => {
               {descuento}%
             </div>
 
-            {/* Segunda fila */}
             <div className="h-12 col-span-1 flex items-center whitespace-nowrap text-base font-medium">
               <Dot className="text-[#EAC45E] -mx-2" size={40} />
               Grupal
             </div>
             <div className="h-12 col-span-1 flex justify-center items-center">
-              {/* TODO: Contenido */}
-              Celda 5
+              {descuentoGrupal === 0 && "No aplica"}
+              {descuentoGrupal === 5 && "Somos 2"}
+              {descuentoGrupal === 10 && "3 o más"}
             </div>
             <div className="h-12 col-span-1 border-l border-neutral-500 flex justify-center items-center font-semibold text-[#EAC45E]">
               {descuentoGrupal}%
@@ -387,19 +387,16 @@ const CotizadorSteps = () => {
         </div>
         <div>
           <div>
-            <div className="flex flex-col relative h-[100px]">
-              {/* <span className="absolute left-8 md:left-40 bottom-0 text-8xl font-bold text-black pr-2 z-10">
-                1
-              </span> */}
+            <div className="flex flex-col relative h-[70px]">
               <div
-                className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center font-semibold tracking-wider bg-gradient-to-r from-[#f5de89] via-[#eccb52] to-[#cfa14c] text-white py-3 px-3`}
+                className={`${montserrat.className} w-full h-[75%] absolute bottom-0 text-center font-semibold tracking-wider bg-gradient-to-r from-[#f5de89] via-[#eccb52] to-[#cfa14c] text-white py-3 px-3`}
               >
                 SESIÓN INDIVIDUAL
               </div>
             </div>
             <div>
               <div>
-                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-semibold h-12 flex items-end justify-center pb-1">
                   {oneSessionCashPrice
                     ? formatNumber(oneSessionCashPrice)
                     : "$0"}
@@ -409,12 +406,12 @@ const CotizadorSteps = () => {
                 </div>
               </div>
               <div>
-                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-semibold h-12 flex items-end justify-center pb-1">
                   {oneSessionCardPrice
                     ? formatNumber(oneSessionCardPrice)
                     : "$0"}
                 </div>
-                <div className="bg-gray-200 p-2 text-center">
+                <div className="bg-gray-200 p-2 text-center flex flex-col gap-2">
                   <p>Débito o crédito</p>
                   <p>Hasta en 6 cuotas sin interés</p>
                 </div>
@@ -429,29 +426,29 @@ const CotizadorSteps = () => {
               <div
                 className={`${montserrat.className} w-full h-1/2 absolute bottom-0 text-center font-semibold tracking-wider bg-gradient-to-r from-[#f5de89] via-[#eccb52] to-[#cfa14c] text-white py-3 px-3`}
               >
-                PACK DE SESIONES
+                PACK DE 6 SESIONES
               </div>
             </div>
             <div>
               <div>
-                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-semibold h-12 flex items-end justify-center pb-1">
                   {oneSessionCashPrice
                     ? formatNumber(oneSessionCashPrice * 6)
                     : "$0"}
                 </div>
                 <div className="bg-gray-200 p-2 text-center">
-                  Precio en efectivo 😊
+                  Precio en efectivo
                 </div>
               </div>
               <div>
-                <div className="text-center text-xl font-medium h-12 flex items-end justify-center">
+                <div className="text-center text-xl font-semibold h-12 flex items-end justify-center pb-1">
                   {oneSessionCardPrice
                     ? formatNumber(oneSessionCardPrice * 6)
                     : "$0"}
                 </div>
-                <div className="bg-gray-200 p-2 text-center">
+                <div className="bg-gray-200 p-2 text-center flex flex-col gap-2">
                   <p>Débito o crédito</p>
-                  <p>Hasta en 6 cuotas sin interés</p>
+                  <p>Hasta en 6 cuotas sin interés 😍</p>
                 </div>
               </div>
             </div>
@@ -486,10 +483,11 @@ const CotizadorSteps = () => {
       <div className="flex flex-col gap-2 mt-4">
         <div className="flex gap-2 items-center">
           {/* <Dot className="text-[#EAC45E] shrink-0" size={40} /> */}
-          <p className="leading-8 tracking-wide px-4 text-justify text-sm">
+          <p className="leading-5 text-neutral-500 tracking-wide px-4 text-justify text-sm">
             Presupuesto válido por 10 días / Para confirmar los turnos es
             necesaria una seña del 30% / Para descuento grupal los integrantes
-            deberán contratar en forma simultánea.
+            deberán contratar en forma simultánea / Descuento en efectivo solo
+            abonando al contado.
           </p>
         </div>
       </div>
