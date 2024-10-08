@@ -212,6 +212,26 @@ const CotizadorSteps = () => {
               />
             </SelectTrigger>
             <SelectContent className="relative">
+              {/* Zonas Principales */}
+              <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
+                Zonas Principales
+              </div>
+              <Separator className="mb-1" />
+              {prices &&
+                prices
+                  .filter((price) => price.mainZone)
+                  .map((price, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSelectTreatment(price.title)}
+                      className={`cursor-pointer px-8 py-2 ${
+                        isSelected(price.title) ? "bg-[#EAC45E] text-white" : ""
+                      }`}
+                    >
+                      {price.title}
+                    </div>
+                  ))}
+
               {/* Sección Alta */}
               <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
                 Zonas Altas
