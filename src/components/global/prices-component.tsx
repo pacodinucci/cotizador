@@ -106,6 +106,7 @@ const PricesComponent = () => {
               <th className="px-4 py-2 border">Sector</th>
               <th className="px-4 py-2 border">Precio</th>
               <th className="px-4 py-2 border">Zona Chica</th>
+              <th className="px-4 py-2 border">Zona Principal</th>
             </tr>
           </thead>
           <tbody>
@@ -121,6 +122,9 @@ const PricesComponent = () => {
                 <td className="px-4 py-4 border">{price.price}</td>
                 <td className="px-4 py-4 border">
                   {price.smallZone ? "Sí" : "No"}
+                </td>
+                <td className="px-4 py-4 border">
+                  {price.mainZone ? "Sí" : "No"}
                 </td>
 
                 {/* Action buttons (animated) */}

@@ -8,10 +8,12 @@ import { oswald } from "@/lib/fonts";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const CreatePricesComponent = () => {
-  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const router = useRouter();
+  const { toast } = useToast();
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
   const handleFileProcessed = async (data: any[]) => {
     const [headers, ...rows] = data;
@@ -22,14 +24,28 @@ const CreatePricesComponent = () => {
       zone: row[2],
       price: row[3],
       smallZone: row[4],
+      mainZone: row[5],
     }));
 
     const success = await createPrices(prices);
     if (success) {
-      setUploadStatus("Precios actualizados!");
-      //   router.push("/prices");
+      setUploadStatus("success");
+      toast({
+        title: "Los precios se actualizaron con éxito.",
+        variant: "default",
+      });
+      setTimeout(() => {
+        router.push("/admin");
+      }, 2000);
     } else {
-      setUploadStatus("Failed to upload prices.");
+      setUploadStatus("error");
+      toast({
+        title: "Error al actualizar los precios.",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        router.push("/admin");
+      }, 2000);
     }
   };
 
@@ -48,7 +64,6 @@ const CreatePricesComponent = () => {
       <Separator />
       <div className="px-6">
         <FileDropzone onFileProcessed={handleFileProcessed} />
-        {uploadStatus && <p>{uploadStatus}</p>}
       </div>
     </div>
   );

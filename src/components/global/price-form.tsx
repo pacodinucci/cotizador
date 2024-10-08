@@ -45,6 +45,7 @@ const formSchema = z.object({
     message: "El código es requerido y debe ser de 3 letras.",
   }),
   smallZone: z.boolean(),
+  mainZone: z.boolean(),
 });
 
 const PriceForm = ({ initialData }: PriceFormProps) => {
@@ -191,6 +192,34 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Zona Chica</FormLabel>
+                <Select
+                  disabled={isLoading}
+                  onValueChange={(value) => field.onChange(value === "true")}
+                  value={field.value ? "true" : "false"}
+                  defaultValue={field.value ? "true" : "false"}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="Selecciona una opción"
+                        defaultValue={field.value ? "true" : "false"}
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="true">Sí</SelectItem>
+                    <SelectItem value="false">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="mainZone"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Zona Principal</FormLabel>
                 <Select
                   disabled={isLoading}
                   onValueChange={(value) => field.onChange(value === "true")}

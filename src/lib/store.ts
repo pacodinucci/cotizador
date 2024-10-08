@@ -7,6 +7,7 @@ interface Price {
   zone: string;
   price: number;
   smallZone: boolean;
+  mainZone: boolean;
 }
 
 interface PriceState {

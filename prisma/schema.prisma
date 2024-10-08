@@ -16,6 +16,7 @@ model Zone {
   title     String
   zone      String
   smallZone Boolean
+  mainZone  Boolean
   price     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -61,8 +61,12 @@ export async function PATCH(
             : existingPrice.price,
         smallZone:
           body.prices[0].smallZone !== undefined
-            ? body.smallZone
+            ? body.prices[0].smallZone
             : existingPrice.smallZone,
+        mainZone:
+          body.prices[0].mainZone !== undefined
+            ? body.prices[0].mainZone
+            : existingPrice.mainZone,
       },
     });
 
