@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 const SetupComponent = () => {
   const router = useRouter();
   return (
-    <div>
+    <div className="mx-4">
       <div className="flex justify-between items-center">
         <h1
           className={`${oswald.className} uppercase text-3xl px-6 text-neutral-700`}
@@ -31,22 +31,28 @@ const SetupComponent = () => {
         </div>
       </div>
       <Separator className="my-8" />
-      <div className="w-1/2 mx-auto">
+      <div className="w-full md:w-1/2">
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger>Orden de Zonas Principales</AccordionTrigger>
+            <AccordionTrigger className="no-underline hover:no-underline focus:no-underline">
+              Orden de Zonas Principales
+            </AccordionTrigger>
             <AccordionContent>
               <MainZoneOrder />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger>Is it accessible?</AccordionTrigger>
+            <AccordionTrigger className="no-underline hover:no-underline focus:no-underline">
+              Esta opción va a ser para los descuentos
+            </AccordionTrigger>
             <AccordionContent>
               Yes. It adheres to the WAI-ARIA design pattern.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
-            <AccordionTrigger>Is it accessible?</AccordionTrigger>
+            <AccordionTrigger className="no-underline hover:no-underline focus:no-underline">
+              Esta opción va a ser para el mensaje
+            </AccordionTrigger>
             <AccordionContent>
               Yes. It adheres to the WAI-ARIA design pattern.
             </AccordionContent>

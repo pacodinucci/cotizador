@@ -220,6 +220,7 @@ const CotizadorSteps = () => {
               {prices &&
                 prices
                   .filter((price) => price.mainZone)
+                  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
                   .map((price, index) => (
                     <div
                       key={index}

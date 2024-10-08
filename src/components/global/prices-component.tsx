@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Component, Edit, Plus, Sheet, Trash2 } from "lucide-react";
+import { Edit, Plus, Sheet, Trash2, SlidersHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePriceStore } from "@/lib/store";
 import { getPrices } from "../../../actions/get-prices";
@@ -80,7 +80,7 @@ const PricesComponent = () => {
             variant="outline"
             onClick={() => router.push("/admin/prices/setup")}
           >
-            <Component />
+            <SlidersHorizontal />
           </Button>
           <Button
             variant="outline"
