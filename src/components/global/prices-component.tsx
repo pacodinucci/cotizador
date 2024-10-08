@@ -78,7 +78,7 @@ const PricesComponent = () => {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            onClick={() => router.push("/admin/combos")}
+            onClick={() => router.push("/admin/prices/setup")}
           >
             <Component />
           </Button>

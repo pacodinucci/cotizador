@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface Price {
+export interface Price {
   id: string;
   code: string;
   title: string;
@@ -8,6 +8,7 @@ interface Price {
   price: number;
   smallZone: boolean;
   mainZone: boolean;
+  order?: number;
 }
 
 interface PriceState {

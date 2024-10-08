@@ -7,20 +7,18 @@ interface Price {
   zone: string;
   price: number;
   smallZone: boolean;
+  mainZone: boolean;
+  order?: number;
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log(body);
     const { prices } = body;
-    console.log("prices --> ", prices);
 
     if (!prices || prices.length === 0) {
       return new NextResponse("No prices provided.", { status: 400 });
     }
-
-    console.log("PRICES -> ", prices);
 
     // Separar los códigos de los precios
     const codes = prices.map((price: Price) => price.code);
@@ -44,15 +42,47 @@ export async function POST(req: Request) {
       existingCodes.includes(price.code)
     );
 
-    // Crear nuevos precios
+    // Obtener el valor más alto de "order" existente para las zonas principales
+    const maxOrder = await db.zone.findFirst({
+      where: {
+        mainZone: true,
+      },
+      orderBy: {
+        order: "desc",
+      },
+      select: {
+        order: true,
+      },
+    });
+
+    let nextOrder =
+      maxOrder && maxOrder.order !== null ? maxOrder.order + 1 : 1; // Iniciar el order en 1 si no existe ningún valor previo.
+
+    // Crear nuevos precios con la lógica de orden
     if (newPrices.length > 0) {
+      const pricesToCreate = newPrices.map((price: Price) => {
+        if (price.mainZone) {
+          price.order = nextOrder;
+          nextOrder++;
+        } else {
+          price.order = undefined;
+        }
+        return price;
+      });
+
       await db.zone.createMany({
-        data: newPrices,
+        data: pricesToCreate,
       });
     }
 
     // Actualizar los precios existentes
     for (const price of updatedPrices) {
+      // Asignar order solo si es zona principal
+      if (price.mainZone && !price.order) {
+        price.order = nextOrder;
+        nextOrder++;
+      }
+
       await db.zone.update({
         where: { code: price.code },
         data: price,
