@@ -18,6 +18,7 @@ model Zone {
   smallZone Boolean
   mainZone  Boolean
   price     Int
+  order     Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

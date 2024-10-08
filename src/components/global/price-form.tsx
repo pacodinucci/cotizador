@@ -98,7 +98,7 @@ const PriceForm = ({ initialData }: PriceFormProps) => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:px-80">
       <div className="flex justify-between items-center">
         <h1
           className={`${oswald.className} uppercase text-3xl px-2 py-4 text-neutral-700`}
