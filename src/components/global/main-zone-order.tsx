@@ -10,8 +10,7 @@ import axios from "axios";
 
 const MainZoneOrder = () => {
   const { prices, setPrices } = usePriceStore();
-  const [mainPrices, setMainPrices] = useState<Price[]>([]);
-  const [zones, setZones] = useState(prices);
+  const [zones, setZones] = useState<Price[]>([]);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -35,14 +34,12 @@ const MainZoneOrder = () => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Actualizamos el estado local con el nuevo orden
     setZones(items);
 
-    // Llamada a la API para actualizar el orden en la base de datos
     try {
       await axios.patch("/api/prices/order", {
         id: reorderedItem.id,
-        newOrder: result.destination.index + 1, // El nuevo orden
+        newOrder: result.destination.index + 1,
       });
       console.log("Orden actualizado exitosamente en la base de datos");
     } catch (error) {
@@ -51,7 +48,20 @@ const MainZoneOrder = () => {
   };
 
   return (
-    <div>
+    <div className="flex">
+      {/* Columna de números */}
+      <ul className="flex flex-col gap-2 mr-2">
+        {zones.map((_, index) => (
+          <li
+            key={index}
+            className="border border-transparent rounded-md px-2 py-2.5 w-10 flex justify-center items-center text-neutral-500"
+          >
+            {index + 1}
+          </li>
+        ))}
+      </ul>
+
+      {/* Lista de elementos draggable */}
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="mainZones">
           {(provided) => (
@@ -60,26 +70,21 @@ const MainZoneOrder = () => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {zones.length > 0 &&
-                zones.map((price, index) => (
-                  <Draggable
-                    key={price.id}
-                    draggableId={price.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <li
-                        className="border border-neutral-300 rounded-md p-2 w-3/4 flex gap-x-2 bg-white"
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                      >
-                        <GripVertical className="text-neutral-300" />
-                        <p>{price.title}</p>
-                      </li>
-                    )}
-                  </Draggable>
-                ))}
+              {zones.map((price, index) => (
+                <Draggable key={price.id} draggableId={price.id} index={index}>
+                  {(provided) => (
+                    <li
+                      className="border border-neutral-300 rounded-md p-2 w-60 flex gap-x-2 bg-white"
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                    >
+                      <GripVertical className="text-neutral-300" />
+                      <p>{price.title}</p>
+                    </li>
+                  )}
+                </Draggable>
+              ))}
               {provided.placeholder}
             </ul>
           )}
