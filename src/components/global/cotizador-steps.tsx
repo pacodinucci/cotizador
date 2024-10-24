@@ -37,12 +37,6 @@ const CotizadorSteps = () => {
   const [oneSessionCardPrice, setOneSessionCardPrice] = useState<number | null>(
     null
   );
-  const [sixSessionsCashPrice, setSixSessionsCashPrice] = useState<
-    number | null
-  >(null);
-  const [sixSessionsCardPrice, setSixSessionsCardPrice] = useState<
-    number | null
-  >(null);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
 
@@ -62,7 +56,9 @@ const CotizadorSteps = () => {
   }, [setPrices]);
 
   useEffect(() => {
-    if (selectedTreatments.length === 2) {
+    if (selectedTreatments.length === 0 || selectedTreatments.length === 1) {
+      setDescuento(0);
+    } else if (selectedTreatments.length === 2) {
       setDescuento(5);
     } else if (selectedTreatments.length === 3) {
       setDescuento(10);
@@ -70,7 +66,6 @@ const CotizadorSteps = () => {
       setDescuento(15);
     } else if (selectedTreatments.length >= 5) {
       setDescuento(20);
-    } else {
     }
   }, [selectedTreatments]);
 
@@ -84,14 +79,18 @@ const CotizadorSteps = () => {
       }
     });
 
-    const descuentoTotal = descuento + descuentoGrupal;
-    const finalCardPrice =
+    // Sumamos el 20% para efectivo a los otros descuentos
+    const descuentoTotal = descuento + descuentoGrupal + 20;
+
+    // Aplicamos el descuento total al precio en efectivo
+    const finalCashPrice =
       totalCardPrice - totalCardPrice * (descuentoTotal / 100);
-
-    setOneSessionCardPrice(finalCardPrice);
-
-    const finalCashPrice = finalCardPrice - finalCardPrice * 0.2;
     setOneSessionCashPrice(finalCashPrice);
+
+    // Aplicamos solo los descuentos de multizona y grupal para tarjeta
+    const finalCardPrice =
+      totalCardPrice - totalCardPrice * ((descuento + descuentoGrupal) / 100);
+    setOneSessionCardPrice(finalCardPrice);
   }, [selectedTreatments, descuento, descuentoGrupal, prices]);
 
   const handleSelectTreatment = (treatment: string) => {
