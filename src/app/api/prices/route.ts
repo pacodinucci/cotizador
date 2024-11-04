@@ -20,10 +20,8 @@ export async function POST(req: Request) {
       return new NextResponse("No prices provided.", { status: 400 });
     }
 
-    // Separar los códigos de los precios
     const codes = prices.map((price: Price) => price.code);
 
-    // Obtener los registros que ya existen en la base de datos basados en los códigos
     const existingPrices = await db.zone.findMany({
       where: {
         code: {
@@ -34,7 +32,6 @@ export async function POST(req: Request) {
 
     const existingCodes = existingPrices.map((price) => price.code);
 
-    // Arrays para almacenar las operaciones
     const newPrices = prices.filter(
       (price: Price) => !existingCodes.includes(price.code)
     );
@@ -42,7 +39,6 @@ export async function POST(req: Request) {
       existingCodes.includes(price.code)
     );
 
-    // Obtener el valor más alto de "order" existente para las zonas principales
     const maxOrder = await db.zone.findFirst({
       where: {
         mainZone: true,
@@ -56,9 +52,8 @@ export async function POST(req: Request) {
     });
 
     let nextOrder =
-      maxOrder && maxOrder.order !== null ? maxOrder.order + 1 : 1; // Iniciar el order en 1 si no existe ningún valor previo.
+      maxOrder && maxOrder.order !== null ? maxOrder.order + 1 : 1;
 
-    // Crear nuevos precios con la lógica de orden
     if (newPrices.length > 0) {
       const pricesToCreate = newPrices.map((price: Price) => {
         if (price.mainZone) {
@@ -75,9 +70,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // Actualizar los precios existentes
     for (const price of updatedPrices) {
-      // Asignar order solo si es zona principal
       if (price.mainZone && !price.order) {
         price.order = nextOrder;
         nextOrder++;

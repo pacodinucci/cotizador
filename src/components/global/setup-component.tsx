@@ -13,6 +13,7 @@ import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
 import { oswald } from "@/lib/fonts";
 import { useRouter } from "next/navigation";
+import ChangePricesComponent from "./change-prices-component";
 
 const SetupComponent = () => {
   const router = useRouter();
@@ -43,10 +44,10 @@ const SetupComponent = () => {
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="no-underline hover:no-underline focus:no-underline">
-              Esta opción va a ser para los descuentos
+              Aumentar productos
             </AccordionTrigger>
             <AccordionContent>
-              Yes. It adheres to the WAI-ARIA design pattern.
+              <ChangePricesComponent />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">

@@ -19,23 +19,29 @@ import {
   DrawerDescription,
   DrawerClose,
   DrawerTrigger,
-} from "../ui/drawer"; // Import your Drawer component
+} from "../ui/drawer";
+import { Oval } from "react-loader-spinner";
 
 const PricesComponent = () => {
   const router = useRouter();
   const { prices, setPrices } = usePriceStore();
-  const [selectedRow, setSelectedRow] = useState<string | null>(null); // Track the selected row
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Control the drawer visibility
-  const [deleteId, setDeleteId] = useState<string | null>(null); // Track which item to delete
+  const [selectedRow, setSelectedRow] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const refreshPrices = async () => {
+    setIsLoading(true);
     const updatedPrices = await getPrices();
     setPrices(updatedPrices);
+    setIsLoading(false);
   };
 
   const fetchPrices = async () => {
+    setIsLoading(true);
     const pricesData = await getPrices();
     setPrices(pricesData);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -54,8 +60,8 @@ const PricesComponent = () => {
     if (deleteId) {
       try {
         await deletePrice(deleteId);
-        setIsDrawerOpen(false); // Close the drawer
-        refreshPrices(); // Refresh the list after deletion
+        setIsDrawerOpen(false);
+        refreshPrices();
       } catch (error) {
         console.error("Error deleting price:", error);
       }
@@ -63,8 +69,8 @@ const PricesComponent = () => {
   };
 
   const openDeleteDrawer = (id: string) => {
-    setDeleteId(id); // Set the ID of the item to delete
-    setIsDrawerOpen(true); // Open the drawer
+    setDeleteId(id);
+    setIsDrawerOpen(true);
   };
 
   return (
@@ -98,68 +104,76 @@ const PricesComponent = () => {
       </div>
       <Separator />
       <div className="overflow-x-auto">
-        <table className="min-h-full table-auto border-collapse w-full">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 border">Zona</th>
-              <th className="px-4 py-2 border">Código</th>
-              <th className="px-4 py-2 border">Sector</th>
-              <th className="px-4 py-2 border">Precio</th>
-              <th className="px-4 py-2 border">Zona Chica</th>
-              <th className="px-4 py-2 border">Zona Principal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {prices.map((price, index) => (
-              <tr
-                key={index}
-                className="text-center relative group"
-                onClick={() => handleRowClick(price.id)}
-              >
-                <td className="px-4 py-4 border">{price.title}</td>
-                <td className="px-4 py-4 border">{price.code}</td>
-                <td className="px-4 py-4 border">{price.zone}</td>
-                <td className="px-4 py-4 border">{price.price}</td>
-                <td className="px-4 py-4 border">
-                  {price.smallZone ? "Sí" : "No"}
-                </td>
-                <td className="px-4 py-4 border">
-                  {price.mainZone ? "Sí" : "No"}
-                </td>
-
-                {/* Action buttons (animated) */}
-                <AnimatePresence>
-                  {selectedRow === price.id && (
-                    <motion.td
-                      className="absolute left-0 top-0 h-full flex items-center justify-center bg-white text-white z-10"
-                      initial={{ x: "-100%", opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: "-100%", opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      style={{ height: "100%" }}
-                    >
-                      <Button
-                        size="sm"
-                        className="bg-blue-600 h-full rounded-none px-6"
-                        onClick={() => handleEditClick(price.id)}
-                      >
-                        <Edit />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        className="rounded-none h-full px-6"
-                        onClick={() => openDeleteDrawer(price.id)} // Open the drawer to confirm deletion
-                      >
-                        <Trash2 />
-                      </Button>
-                    </motion.td>
-                  )}
-                </AnimatePresence>
+        {isLoading ? (
+          <div className="flex flex-col gap-y-2 justify-center items-center pt-24">
+            <Oval color="black" secondaryColor="gray" />
+            Cargando zonas...
+          </div>
+        ) : (
+          <table className="min-h-full table-auto border-collapse w-full">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-2 border">Zona</th>
+                <th className="px-4 py-2 border">Código</th>
+                <th className="px-4 py-2 border">Sector</th>
+                <th className="px-4 py-2 border">Precio</th>
+                <th className="px-4 py-2 border">Zona Chica</th>
+                <th className="px-4 py-2 border">Zona Principal</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {prices &&
+                prices.map((price, index) => (
+                  <tr
+                    key={index}
+                    className="text-center relative group"
+                    onClick={() => handleRowClick(price.id)}
+                  >
+                    <td className="px-4 py-4 border">{price.title}</td>
+                    <td className="px-4 py-4 border">{price.code}</td>
+                    <td className="px-4 py-4 border">{price.zone}</td>
+                    <td className="px-4 py-4 border">{price.price}</td>
+                    <td className="px-4 py-4 border">
+                      {price.smallZone ? "Sí" : "No"}
+                    </td>
+                    <td className="px-4 py-4 border">
+                      {price.mainZone ? "Sí" : "No"}
+                    </td>
+
+                    {/* Action buttons (animated) */}
+                    <AnimatePresence>
+                      {selectedRow === price.id && (
+                        <motion.td
+                          className="absolute left-0 top-0 h-full flex items-center justify-center bg-white text-white z-10"
+                          initial={{ x: "-100%", opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          exit={{ x: "-100%", opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{ height: "100%" }}
+                        >
+                          <Button
+                            size="sm"
+                            className="bg-blue-600 h-full rounded-none px-6"
+                            onClick={() => handleEditClick(price.id)}
+                          >
+                            <Edit />
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            className="rounded-none h-full px-6"
+                            onClick={() => openDeleteDrawer(price.id)} // Open the drawer to confirm deletion
+                          >
+                            <Trash2 />
+                          </Button>
+                        </motion.td>
+                      )}
+                    </AnimatePresence>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Drawer for delete confirmation */}
