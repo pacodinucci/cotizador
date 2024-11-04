@@ -13,6 +13,20 @@ const fontSans = FontSans({
 export const metadata: Metadata = {
   title: "Clinica W",
   description: "Cotizador",
+  openGraph: {
+    title: "Clinica W - Cotizador",
+    description: "Cotizador de servicios de Clinica W",
+    url: "https://www.sopranow.com",
+    type: "website",
+    images: [
+      {
+        url: "/doblev.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Descripción de la imagen",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
