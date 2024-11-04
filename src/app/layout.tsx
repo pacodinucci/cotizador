@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/doblev.jpg",
+        url: "https://www.clinicaw.com.ar/wp-content/uploads/2022/09/LOGO-CLINICA-W.jpg",
         width: 1200,
         height: 630,
         alt: "Descripción de la imagen",
