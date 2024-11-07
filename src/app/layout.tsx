@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/global/navbar";
 import { Toaster } from "@/components/ui/toaster";
+import { ClerkProvider } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -35,20 +37,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/doblev.jpg" />
-      </head>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <Navbar />
-        {children}
-        <Toaster />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <link rel="icon" href="/doblev.jpg" />
+        </head>
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            fontSans.variable
+          )}
+        >
+          <Navbar />
+          {children}
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

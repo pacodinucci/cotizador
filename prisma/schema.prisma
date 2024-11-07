@@ -35,3 +35,14 @@ model Combo {
 
   zones Zone[] @relation("ComboZones")
 }
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  firstName   String?
+  lastName    String?
+  imageUrl    String?
+  clerkUserId String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

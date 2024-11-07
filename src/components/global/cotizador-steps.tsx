@@ -16,6 +16,7 @@ import { Separator } from "../ui/separator";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const CotizadorStepsWrapper = () => {
   return (
@@ -187,6 +188,14 @@ const CotizadorSteps = () => {
 
   return (
     <div className="bg-gray-100 text-neutral-700 antialiased min-h-screen px-4 flex flex-col gap-y-4 py-8 no-select">
+      {/* <div className="absolute top-0 right-0">
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div> */}
       <div
         className={`${montserrat.className} bg-white w-full min-h-[140px] px-4 py-1 flex flex-col gap-y-4`}
       >
