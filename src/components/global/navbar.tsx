@@ -23,7 +23,13 @@ const Navbar = () => {
   };
 
   const handleSignOut = async () => {
-    signOut({ callbackUrl: "/auth/login" });
+    signOut({ callbackUrl: "/" });
+    setIsMenuOpen(false);
+  };
+
+  const handleSignIn = () => {
+    router.push("/auth/login");
+    setIsMenuOpen(false);
   };
 
   return (
@@ -57,12 +63,20 @@ const Navbar = () => {
             <X />
           </button>
           <nav className="flex flex-col space-y-4">
-            <a onClick={() => router.push("/")} className="text-neutral-800">
-              Iniciar sesión
-            </a>
-            <a onClick={handleSignOut} className="text-neutral-800">
-              Cerrar sesión
-            </a>
+            {user ? (
+              <div>
+                <div>
+                  <p>Hola, {user.name}</p>
+                </div>
+                <a onClick={handleSignOut} className="text-neutral-800">
+                  Cerrar sesión
+                </a>
+              </div>
+            ) : (
+              <a onClick={handleSignIn} className="text-neutral-800">
+                Iniciar sesión
+              </a>
+            )}
           </nav>
         </motion.div>
       )}
