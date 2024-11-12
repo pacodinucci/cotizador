@@ -9,9 +9,9 @@ import { UserRole } from "@prisma/client";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async session({ token, session }) {
-      console.log({
-        sessionToken: token,
-      });
+      // console.log({
+      //   sessionToken: token,
+      // });
       if (token.sub && token.role && session.user) {
         session.user.id = token.sub;
         session.user.role = token.role as UserRole;

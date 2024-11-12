@@ -2,19 +2,23 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { MenuIcon, X } from "lucide-react";
 import { motion } from "framer-motion";
-import { useCurrentUser } from "../../../hooks/use-current-user";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
   const router = useRouter();
-  const user = useCurrentUser();
+  const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
-    console.log(user);
-  }, [user]);
+    console.log("Estado de sesión:", { user, status });
+    // if (pathname.includes("admin") && user?.role !== "ADMIN") {
+    //   router.push("/");
+    // }
+  }, [user, status]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -62,15 +66,45 @@ const Navbar = () => {
           >
             <X />
           </button>
-          <nav className="flex flex-col space-y-4">
-            {user ? (
-              <div>
+          <nav>
+            {status === "loading" ? (
+              <p>Cargando...</p> // Muestra "Cargando..." mientras se verifica el estado de sesión
+            ) : user ? (
+              <div className="flex flex-col space-y-6">
                 <div>
                   <p>Hola, {user.name}</p>
                 </div>
-                <a onClick={handleSignOut} className="text-neutral-800">
-                  Cerrar sesión
-                </a>
+                {user.role === "ADMIN" ? (
+                  <div className="flex flex-col space-y-4">
+                    <a
+                      onClick={() => router.push("/admin")}
+                      className="text-neutral-800"
+                    >
+                      Panel Admin
+                    </a>
+                    <a onClick={handleSignOut} className="text-neutral-800">
+                      Cerrar sesión
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex flex-col space-y-4">
+                    <a
+                      onClick={() => router.push("/reservar-turno")}
+                      className="text-neutral-800"
+                    >
+                      Reservar turno
+                    </a>
+                    <a
+                      onClick={() => router.push("/cuenta")}
+                      className="text-neutral-800"
+                    >
+                      Cuenta
+                    </a>
+                    <a onClick={handleSignOut} className="text-neutral-800">
+                      Cerrar sesión
+                    </a>
+                  </div>
+                )}
               </div>
             ) : (
               <a onClick={handleSignIn} className="text-neutral-800">
