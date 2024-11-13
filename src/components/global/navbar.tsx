@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MenuIcon, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
@@ -15,9 +15,9 @@ const Navbar = () => {
 
   useEffect(() => {
     console.log("Estado de sesión:", { user, status });
-    // if (pathname.includes("admin") && user?.role !== "ADMIN") {
-    //   router.push("/");
-    // }
+    if (pathname.includes("admin") && user?.role !== "ADMIN") {
+      router.push("/");
+    }
   }, [user, status]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,10 +46,24 @@ const Navbar = () => {
         className="md:w-[320px]"
       />
       <div
-        className="absolute top-4 right-4 cursor-pointer hidden justify-center items-center"
+        className="absolute top-4 right-4 cursor-pointer flex justify-center items-center z-50"
         onClick={toggleMenu}
       >
-        <MenuIcon className="text-neutral-800 h-6 w-6" />
+        <AnimatePresence>
+          <motion.div
+            key={isMenuOpen ? "close" : "menu"}
+            initial={{ rotate: 0, opacity: 0 }}
+            animate={{ rotate: 180, opacity: 1 }}
+            exit={{ rotate: -180, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {isMenuOpen ? (
+              <X className="text-neutral-800 h-6 w-6" />
+            ) : (
+              <MenuIcon className="text-neutral-800 h-6 w-6" />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
       {/* Menú desplegable */}
       {isMenuOpen && (
@@ -58,14 +72,14 @@ const Navbar = () => {
           animate={{ x: 0 }}
           exit={{ x: "100%" }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed top-0 right-0 h-full w-3/4 md:w-1/4 bg-white shadow-lg z-50 flex flex-col items-start p-5"
+          className="fixed top-0 right-0 h-full w-3/4 md:w-1/4 bg-white shadow-lg z-40 flex flex-col items-start p-5"
         >
-          <button
-            onClick={toggleMenu}
-            className="self-end mb-4 text-lg font-bold"
-          >
-            <X />
-          </button>
+          {/* <button
+              onClick={toggleMenu}
+              className="self-end mb-4 text-lg font-bold"
+            >
+              <X />
+            </button> */}
           <nav>
             {status === "loading" ? (
               <p>Cargando...</p> // Muestra "Cargando..." mientras se verifica el estado de sesión

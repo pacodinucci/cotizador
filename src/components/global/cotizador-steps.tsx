@@ -219,7 +219,7 @@ const CotizadorSteps = () => {
                 }
               />
             </SelectTrigger>
-            <SelectContent className="relative">
+            <SelectContent className="relative w-[84vw]">
               {/* Zonas Principales */}
               <div className="px-8 py-2 font-bold text-gray-600 bg-neutral-200">
                 Zonas Principales
