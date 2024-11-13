@@ -46,7 +46,7 @@ const Navbar = () => {
         className="md:w-[320px]"
       />
       <div
-        className="absolute top-4 right-4 cursor-pointer flex justify-center items-center"
+        className="absolute top-4 right-4 cursor-pointer hidden justify-center items-center"
         onClick={toggleMenu}
       >
         <MenuIcon className="text-neutral-800 h-6 w-6" />
