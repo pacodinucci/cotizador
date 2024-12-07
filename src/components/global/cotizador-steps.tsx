@@ -442,7 +442,7 @@ const CotizadorSteps = () => {
                 </div>
                 <div className="bg-gray-200 p-2 text-center flex flex-col gap-2">
                   <p>Débito o crédito</p>
-                  <p>Hasta en 6 cuotas sin interés</p>
+                  <p>Hasta en 12 cuotas sin interés</p>
                 </div>
               </div>
             </div>
@@ -477,7 +477,7 @@ const CotizadorSteps = () => {
                 </div>
                 <div className="bg-gray-200 p-2 text-center flex flex-col gap-2">
                   <p>Débito o crédito</p>
-                  <p>Hasta en 6 cuotas sin interés 😍</p>
+                  <p>Hasta en 12 cuotas sin interés 😍</p>
                 </div>
               </div>
             </div>
