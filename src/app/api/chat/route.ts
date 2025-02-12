@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       {
         role: "system",
         content:
-          "Eres un asistente experto que responde preguntas basadas en el contexto proporcionado. No respondas nada que no esté en el contexto proporcionado. Respondeme en forma de poesía.",
+          "Eres un asistente experto que responde preguntas basadas en el contexto proporcionado. No respondas nada que no esté en el contexto proporcionado.",
       },
       ...messages,
       {
