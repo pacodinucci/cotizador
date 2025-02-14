@@ -2,12 +2,17 @@
 
 import { useChat } from "ai/react";
 
-const Chat = () => {
+interface ChatProps {
+  directions: string;
+}
+
+const Chat = ({ directions }: ChatProps) => {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     maxSteps: 5,
   });
+
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+    <div className="flex flex-col w-full max-w-md py-24 mx-auto">
       {messages.map((m) => (
         <div key={m.id} className="whitespace-pre-wrap">
           {m.role === "user" ? "User: " : "AI: "}

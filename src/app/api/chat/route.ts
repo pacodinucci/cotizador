@@ -4,11 +4,15 @@ import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
+import db from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
     // Recibir los messages (historial de conversación) y la consulta actual
     const { messages } = await req.json();
+
+    const allDirections = await db.directions.findMany();
+    const directionContent = allDirections[0].content;
 
     if (!messages || messages.length === 0) {
       return NextResponse.json(
@@ -60,8 +64,7 @@ export async function POST(req: Request) {
     const updatedMessages = [
       {
         role: "system",
-        content:
-          "Eres un asistente experto que responde preguntas basadas en el contexto proporcionado. No respondas nada que no esté en el contexto proporcionado.",
+        content: directionContent,
       },
       ...messages,
       {

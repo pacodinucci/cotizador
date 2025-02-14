@@ -73,3 +73,10 @@ model Account {
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
+
+model Directions {
+  id        String   @id @default(cuid())
+  name      String
+  content   String
+  createdAt DateTime @default(now())
+}
