@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,34 +8,27 @@ datasource db {
 }
 
 model Zone {
-  id        String   @id @default(uuid())
-  code      String   @unique
-  title     String
-  zone      String
-  smallZone Boolean
-  mainZone  Boolean
-  price     Int
-  order     Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  combos Combo[] @relation("ComboZones")
+  id         String       @id @default(uuid())
+  code       String       @unique
+  title      String
+  zone       String
+  smallZone  Boolean
+  mainZone   Boolean
+  price      Int
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  order      Int?
+  ComboZones ComboZones[]
 }
 
 model Combo {
-  id         String   @id @default(uuid())
+  id         String       @id @default(uuid())
   title      String
   price      Int
   smallZones Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  zones Zone[] @relation("ComboZones")
-}
-
-enum UserRole {
-  ADMIN
-  USER
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  ComboZones ComboZones[]
 }
 
 model User {
@@ -49,6 +39,7 @@ model User {
   image         String?
   password      String?
   role          UserRole  @default(USER)
+  phone         String?
   accounts      Account[]
 
   @@map("users")
@@ -60,15 +51,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -76,7 +66,140 @@ model Account {
 
 model Directions {
   id        String   @id @default(cuid())
-  name      String
   content   String
   createdAt DateTime @default(now())
+  name      String
+}
+
+model Appointment {
+  id                String           @id
+  zones             String[]
+  date              DateTime
+  hour              String
+  duration          Int
+  customerId        String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime
+  professionalId    String?
+  isCanceled        Boolean          @default(false)
+  treatmentId       String
+  Customer          Customer?        @relation(fields: [customerId], references: [id])
+  Professional      Professional?    @relation(fields: [professionalId], references: [id])
+  Treatment         Treatment        @relation(fields: [treatmentId], references: [id])
+  Calendar          Calendar[]
+  clinicalHistoryId String? // 👈 relación opcional
+  ClinicalHistory   ClinicalHistory? @relation("HistoryAppointments", fields: [clinicalHistoryId], references: [id])
+}
+
+model Calendar {
+  id             String        @id
+  date           DateTime
+  hour           String
+  treatment      String
+  status         String        @default("reserved")
+  appointmentId  String
+  professionalId String?
+  customerId     String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime
+  Appointment    Appointment   @relation(fields: [appointmentId], references: [id])
+  Customer       Customer      @relation(fields: [customerId], references: [id])
+  Professional   Professional? @relation(fields: [professionalId], references: [id])
+
+  @@unique([date, hour, professionalId])
+}
+
+model Chat {
+  id        String    @id
+  number    String
+  status    String?
+  createdAt DateTime  @default(now())
+  Message   Message[]
+}
+
+model Customer {
+  id              String            @id
+  name            String
+  phone           String
+  email           String
+  createdAt       DateTime          @default(now())
+  Appointment     Appointment[]
+  Calendar        Calendar[]
+  ClinicalHistory ClinicalHistory[]
+}
+
+model Message {
+  id        String   @id
+  number    String
+  content   String
+  role      String
+  createdAt DateTime @default(now())
+  chatId    String
+  Chat      Chat     @relation(fields: [chatId], references: [id])
+}
+
+model Professional {
+  id          String        @id
+  name        String
+  specialty   String?
+  active      Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  Appointment Appointment[]
+  Calendar    Calendar[]
+}
+
+model Treatment {
+  id              String        @id @default(uuid())
+  name            String        @unique
+  description     String?
+  requiresConsult Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  modules         Int?
+  Appointment     Appointment[]
+}
+
+model ClinicalHistory {
+  id             String             @id @default(uuid())
+  customerId     String
+  customer       Customer           @relation(fields: [customerId], references: [id])
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  medicalRecords MedicalRecord[]
+  documents      ClinicalDocument[]
+  appointments   Appointment[]      @relation("HistoryAppointments")
+}
+
+model MedicalRecord {
+  id                String          @id @default(uuid())
+  clinicalHistoryId String
+  description       String
+  date              DateTime        @default(now())
+  ClinicalHistory   ClinicalHistory @relation(fields: [clinicalHistoryId], references: [id], onDelete: Cascade)
+}
+
+model ClinicalDocument {
+  id                String          @id @default(uuid())
+  clinicalHistoryId String
+  name              String
+  fileUrl           String
+  uploadedAt        DateTime        @default(now())
+  ClinicalHistory   ClinicalHistory @relation(fields: [clinicalHistoryId], references: [id], onDelete: Cascade)
+}
+
+model ComboZones {
+  A     String
+  B     String
+  Combo Combo  @relation(fields: [A], references: [id], onDelete: Cascade)
+  Zone  Zone   @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_ComboZones_AB_pkey")
+  @@index([B], map: "_ComboZones_B_index")
+  @@map("_ComboZones")
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }

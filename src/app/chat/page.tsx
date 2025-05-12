@@ -55,6 +55,7 @@ const ChatPage = (props: Props) => {
       const res = await axios.patch(`/api/directions/${directionId}`, {
         content: directionsContent,
       });
+      console.log(directionsContent);
     } catch (error) {
       console.error("Error al actualizar la dirección:", error);
       alert("Hubo un problema al actualizar la dirección.");
@@ -108,7 +109,7 @@ const ChatPage = (props: Props) => {
           {directionsMenuOpen && (
             <div className="mt-10 flex flex-col gap-2">
               <h2 className="text-lg font-semibold text-gray-700 mb-2">
-                Direcciones para el chatbot
+                Directivas para las respuestas del chatbot
               </h2>
               {/* <textarea
                 className="w-full h-96 p-2 border rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-neutral-100"
@@ -116,18 +117,16 @@ const ChatPage = (props: Props) => {
                 value={directionsContent}
                 onChange={(e) => setDirectionsContent(e.target.value)}
               /> */}
-              <div className="border rounded-md p-2 bg-white">
-                {/* <EditorInstance
-                  value={directionsContent}
-                  onChange={setDirectionsContent}
-                /> */}
+              <div className="border rounded-md p-2 bg-white flex flex-col">
                 <ReactQuill
                   theme="snow"
                   value={directionsContent}
                   onChange={setDirectionsContent}
                   placeholder="Escribe aquí las direcciones..."
+                  className="flex-1"
                 />
               </div>
+
               <Button
                 className="bg-blue-500 hover:bg-blue-500/80 self-center"
                 onClick={handleSave}
