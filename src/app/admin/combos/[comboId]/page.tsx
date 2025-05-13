@@ -11,14 +11,10 @@ interface ComboPageProps {
 const ComboIdPage = async ({ params }: ComboPageProps) => {
   const combo = await db.combo.findFirst({
     where: { id: params.comboId },
-    include: { zones: true },
+    include: { ComboZones: true },
   });
 
-  return (
-    <div>
-      <ComboForm initialData={combo} />
-    </div>
-  );
+  return <div>{/* <ComboForm initialData={combo} /> */}</div>;
 };
 
 export default ComboIdPage;

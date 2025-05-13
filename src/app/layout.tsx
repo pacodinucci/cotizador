@@ -6,6 +6,7 @@ import Navbar from "@/components/global/navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "../../auth";
+import NavbarWrapper from "@/components/global/navbar-wrapper";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
@@ -49,7 +51,7 @@ export default async function RootLayout({
             fontSans.variable
           )}
         >
-          <Navbar />
+          <NavbarWrapper />
           {children}
           <Toaster />
         </body>

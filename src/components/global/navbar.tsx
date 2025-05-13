@@ -9,16 +9,16 @@ import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
   const router = useRouter();
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const { data: session, status } = useSession();
   const user = session?.user;
 
-  useEffect(() => {
-    console.log("Estado de sesión:", { user, status });
-    if (pathname.includes("admin") && user?.role !== "ADMIN") {
-      router.push("/");
-    }
-  }, [user, status]);
+  // useEffect(() => {
+  //   console.log("Estado de sesión:", { user, status });
+  //   if (pathname.includes("admin") && user?.role !== "ADMIN") {
+  //     router.push("/");
+  //   }
+  // }, [user, status]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
