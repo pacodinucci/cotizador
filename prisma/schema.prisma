@@ -118,14 +118,29 @@ model Chat {
 }
 
 model Customer {
-  id              String            @id
-  name            String
-  phone           String
-  email           String
-  createdAt       DateTime          @default(now())
-  Appointment     Appointment[]
-  Calendar        Calendar[]
-  ClinicalHistory ClinicalHistory[]
+  id                    String            @id @default(uuid())
+  name                  String
+  phone                 String
+  email                 String
+  nickname              String?
+  dni                   String?
+  gender                String?
+  birthDate             DateTime?
+  profession            String?
+  address               String?
+  province              String?
+  neighborhood          String?
+  city                  String?
+  nationality           String?
+  approach              String?
+  approachContact       String?
+  medicalCoverage       String?
+  medicalCoveragePlan   String?
+  medicalCoverageNumber String?
+  createdAt             DateTime          @default(now())
+  Appointment           Appointment[]
+  Calendar              Calendar[]
+  ClinicalHistory       ClinicalHistory[]
 }
 
 model Message {

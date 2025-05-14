@@ -6,7 +6,8 @@ import Navbar from "@/components/global/navbar";
 const NavbarWrapper = () => {
   const pathname = usePathname();
 
-  const hideNavbar = pathname.startsWith("/admin");
+  const hideNavbar =
+    pathname.startsWith("/admin") || pathname.startsWith("/form");
 
   if (hideNavbar) return null;
 
