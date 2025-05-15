@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { montserrat } from "@/lib/fonts";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -50,6 +51,7 @@ import {
   SURGERY_HISTORY_OPTIONS,
   TETANUS_VACCINE_OPTIONS,
 } from "@/lib/formConstants";
+import axios from "axios";
 
 const formSchema = z.object({
   cardiovascular: z
@@ -116,7 +118,7 @@ const formSchema = z.object({
   prosthesis: z.array(z.string()).min(1, "Este campo es obligatorio"),
   prosthesisOther: z.string().optional(),
 
-  generalCondition: z.string().min(1, "Este campo es obligatorio"),
+  generalCondition: z.array(z.string()).min(1, "Este campo es obligatorio."),
 
   medication: z.array(z.string()).min(1, "Este campo es obligatorio"),
   medicationOther: z.string().optional(),
@@ -145,7 +147,9 @@ const formSchema = z.object({
 
   isotretinoinUsageOther: z.string().optional(),
 
-  tetanusVaccine: z.string({ required_error: "Debés seleccionar una opción." }),
+  tetanusVaccine: z
+    .string()
+    .min(1, { message: "Debés seleccionar una opción." }),
 
   tetanusVaccineOther: z.string().optional(),
 
@@ -157,7 +161,10 @@ const formSchema = z.object({
 });
 
 const MedicalRecordForm = () => {
+  const router = useRouter();
   const { customerId } = usePersonalData();
+
+  console.log(customerId);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -165,7 +172,18 @@ const MedicalRecordForm = () => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = () => {};
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const payload = {
+      ...data,
+      customerId,
+    };
+    try {
+      const response = await axios.post("/api/medicalRecord", payload);
+      router.push("/form/successfull");
+    } catch (error) {
+      console.error("Error al crear el registro:", error);
+    }
+  };
 
   return (
     <div className={`${montserrat.className} p-4 md:px-40 w-[70vw] mx-auto`}>
@@ -175,7 +193,7 @@ const MedicalRecordForm = () => {
           A continuación te haremos algunas preguntas relacionadas con tu
           historial médico. Si tenes antecedentes de alguna de las condiciones
           por favor marcala/s y luego describi cualquier detalle importante en
-          "otro".
+          &quot;otro&quot;.
         </h3>
       </div>
       <Form {...form}>
@@ -188,7 +206,7 @@ const MedicalRecordForm = () => {
             name="cardiovascular"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones
                   cardiovasculares?
@@ -259,7 +277,7 @@ const MedicalRecordForm = () => {
             name="bloodConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones de la sangre?
                 </FormLabel>
@@ -329,7 +347,7 @@ const MedicalRecordForm = () => {
             name="liverDiseases"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías hepáticas?
                 </FormLabel>
@@ -399,7 +417,7 @@ const MedicalRecordForm = () => {
             name="infectiousDiseases"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de enfermedades/condiciones infecciosas?
                 </FormLabel>
@@ -469,7 +487,7 @@ const MedicalRecordForm = () => {
             name="neurologicalConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de condiciones neurológicas o
                   neuromusculares?
@@ -538,7 +556,7 @@ const MedicalRecordForm = () => {
             name="lungConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones pulmonares?
                 </FormLabel>
@@ -606,7 +624,7 @@ const MedicalRecordForm = () => {
             name="bloodType"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>¿Cuál es su grupo y factor sanguíneo?</FormLabel>
                 <div className="flex flex-col gap-2 px-2">
                   {BLOOD_TYPES.map((type) => (
@@ -632,7 +650,7 @@ const MedicalRecordForm = () => {
             name="oncologicalConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones oncológicas?
                 </FormLabel>
@@ -700,7 +718,7 @@ const MedicalRecordForm = () => {
             name="metabolicConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones metabólicas?
                 </FormLabel>
@@ -766,7 +784,7 @@ const MedicalRecordForm = () => {
             name="skinConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones de la piel?
                 </FormLabel>
@@ -832,7 +850,7 @@ const MedicalRecordForm = () => {
             name="gynecologicalConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones ginecológicas?{" "}
                   <span className="text-sm italic text-gray-500 block">
@@ -902,7 +920,7 @@ const MedicalRecordForm = () => {
             name="familyBackground"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   Antecedentes de Familia{" "}
                   <span className="text-sm italic text-gray-500 block">
@@ -958,7 +976,7 @@ const MedicalRecordForm = () => {
             name="hormonalConditions"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedentes de patologías/condiciones hormonales?
                 </FormLabel>
@@ -1024,13 +1042,14 @@ const MedicalRecordForm = () => {
             name="surgeryHistory"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Alguna vez te realizaron un procedimiento quirúrgico?
                   <p className="text-sm text-neutral-500">
                     Si alguna vez has tenido una cirugía por favor indique que
-                    "Sí" y luego desarrolle en "otro" indicando el tipo de
-                    procedimiento, el año y el estado actual.
+                    &quot;Sí&quot; y luego desarrolle en &quot;otro&quot;
+                    indicando el tipo de procedimiento, el año y el estado
+                    actual.
                   </p>
                 </FormLabel>
 
@@ -1065,13 +1084,14 @@ const MedicalRecordForm = () => {
                   ))}
                 </div>
 
-                {field.value?.includes("Otros") && (
+                {/* Mostrar input si seleccionó "Sí" */}
+                {field.value?.includes("Sí") && (
                   <FormField
                     name="surgeryHistoryOther"
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="mt-2">
-                        <FormLabel>Otros:</FormLabel>
+                        <FormLabel>Especificá el procedimiento</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -1079,6 +1099,7 @@ const MedicalRecordForm = () => {
                             placeholder="Ej: cesárea (2019), sin complicaciones"
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1093,13 +1114,14 @@ const MedicalRecordForm = () => {
             name="prosthesis"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés alguna prótesis médica?
                   <p className="text-sm text-neutral-500">
                     Ejemplo: Metálica, dental, acústica, válvula cardíaca, etc.
-                    Si la respuesta es afirmativa por favor indique que "Sí" y
-                    luego desarrolle en "otro" indicando el tipo de prótesis.
+                    Si la respuesta es afirmativa por favor indique que
+                    &quot;Sí&quot; y luego desarrolle en &quot;otro&quot;
+                    indicando el tipo de prótesis.
                   </p>
                 </FormLabel>
 
@@ -1134,20 +1156,22 @@ const MedicalRecordForm = () => {
                   ))}
                 </div>
 
-                {field.value?.includes("Otros") && (
+                {/* Mostrar input si seleccionó "Sí" */}
+                {field.value?.includes("Sí") && (
                   <FormField
                     name="prosthesisOther"
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="mt-2">
-                        <FormLabel>Otros:</FormLabel>
+                        <FormLabel>Especificar prótesis</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             className="w-96"
-                            placeholder="Especificar..."
+                            placeholder="Ej: prótesis dental"
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1162,24 +1186,46 @@ const MedicalRecordForm = () => {
             name="generalCondition"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Presenta alguna de las siguientes condiciones?
                 </FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl className="w-96">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona una opción" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {GENERAL_CONDITIONS_OPTIONS.map((option) => (
-                      <SelectItem key={option} value={option}>
-                        {option}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+
+                <div className="flex flex-col gap-2 px-2">
+                  {GENERAL_CONDITIONS_OPTIONS.map((option) => (
+                    <label key={option} className="flex items-center gap-2">
+                      <Checkbox
+                        checked={field.value?.includes(option) || false}
+                        onCheckedChange={(checked) => {
+                          const newValue = field.value || [];
+
+                          if (option === "Ninguna") {
+                            return checked
+                              ? field.onChange(["Ninguna"])
+                              : field.onChange([]);
+                          }
+
+                          if (newValue.includes("Ninguna")) {
+                            const filtered = newValue.filter(
+                              (v) => v !== "Ninguna"
+                            );
+                            field.onChange(
+                              checked ? [...filtered, option] : filtered
+                            );
+                          } else {
+                            field.onChange(
+                              checked
+                                ? [...newValue, option]
+                                : newValue.filter((v) => v !== option)
+                            );
+                          }
+                        }}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+
                 <FormMessage />
               </FormItem>
             )}
@@ -1189,14 +1235,14 @@ const MedicalRecordForm = () => {
             name="medication"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tomaste alguna medicación en las últimas semanas?
                   <p className="text-sm text-neutral-500">
                     Ejemplo: Anticonceptivos, Antibióticos, Hipertensivos,
                     Corticoides. Si la respuesta es afirmativa por favor indique
-                    en "otro" el fármaco, dosis, frecuencia y fecha de la última
-                    toma.
+                    en &quot;otro&quot; el fármaco, dosis, frecuencia y fecha de
+                    la última toma.
                   </p>
                 </FormLabel>
 
@@ -1231,20 +1277,22 @@ const MedicalRecordForm = () => {
                   ))}
                 </div>
 
-                {field.value?.includes("Otros") && (
+                {/* ✅ Mostrar input si seleccionó "Sí" */}
+                {field.value?.includes("Sí") && (
                   <FormField
                     name="medicationOther"
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="mt-2">
-                        <FormLabel>Otros:</FormLabel>
+                        <FormLabel>Especificar medicación:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             className="w-96"
-                            placeholder="Especificar..."
+                            placeholder="Ej: Ibuprofeno 600mg, 1 cada 8 hs"
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1259,7 +1307,7 @@ const MedicalRecordForm = () => {
             name="recentTreatment"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Realizaste algún tratamiento médico recientemente?
                 </FormLabel>
@@ -1306,7 +1354,7 @@ const MedicalRecordForm = () => {
             name="pastTreatment"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Realizaste algún tratamiento (médico o farmacológico) de
                   importancia en el pasado?
@@ -1354,7 +1402,7 @@ const MedicalRecordForm = () => {
             name="aestheticTreatment"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Realizaste algún procedimiento estético recientemente?
                 </FormLabel>
@@ -1405,7 +1453,7 @@ const MedicalRecordForm = () => {
             name="allergyHistory"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>¿Tenés antecedentes de alergia?</FormLabel>
                 <div className="flex flex-col gap-2 px-2">
                   {ALLERGY_OPTIONS.map((option) => (
@@ -1455,7 +1503,7 @@ const MedicalRecordForm = () => {
             name="isotretinoinUsage"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Alguna vez utilizaste fármacos con Isotretinoína (Roacután)?
                 </FormLabel>
@@ -1504,35 +1552,39 @@ const MedicalRecordForm = () => {
             name="tetanusVaccine"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Alguna vez te aplicaste la vacuna antitetánica?
                 </FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccioná una opción" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {TETANUS_VACCINE_OPTIONS.map((option) => (
-                      <SelectItem key={option} value={option}>
-                        {option}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex flex-col gap-2 px-2">
+                  {TETANUS_VACCINE_OPTIONS.map((option) => (
+                    <label key={option} className="flex items-center gap-2">
+                      <Checkbox
+                        checked={field.value === option}
+                        onCheckedChange={() => {
+                          field.onChange(option === field.value ? "" : option);
+                        }}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+
                 <FormMessage />
+
                 {field.value === "Sí" && (
                   <FormField
                     name="tetanusVaccineOther"
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="mt-2">
-                        <FormLabel>Otros:</FormLabel>
+                        <FormLabel>
+                          Especificá cuándo y por qué razón:
+                        </FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} className="w-96" />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -1545,7 +1597,7 @@ const MedicalRecordForm = () => {
             name="otherCondition"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="bg-zinc-50 p-8 rounded-md">
                 <FormLabel>
                   ¿Tenés antecedente de algún tratamiento o condición que no
                   figure en este cuestionario?
@@ -1588,6 +1640,13 @@ const MedicalRecordForm = () => {
               </FormItem>
             )}
           />
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-1/4 self-center"
+          >
+            {isLoading ? "Enviando..." : "Siguiente"}
+          </Button>
         </form>
       </Form>
     </div>

@@ -139,9 +139,9 @@ export const HORMONAL_CONDITIONS_OPTIONS = [
   "Otros",
 ];
 
-export const SURGERY_HISTORY_OPTIONS = ["No", "Sí", "Otros"];
+export const SURGERY_HISTORY_OPTIONS = ["No", "Sí"];
 
-export const PROSTHESIS_OPTIONS = ["No", "Sí", "Otros"];
+export const PROSTHESIS_OPTIONS = ["No", "Sí"];
 
 export const GENERAL_CONDITIONS_OPTIONS = [
   "Ninguna",
@@ -151,11 +151,11 @@ export const GENERAL_CONDITIONS_OPTIONS = [
   "Vómitos frecuentes",
 ];
 
-export const MEDICATION_OPTIONS = ["No", "Sí", "Otros"];
+export const MEDICATION_OPTIONS = ["No", "Sí"];
 
-export const RECENT_TREATMENT_OPTIONS = ["No", "Sí", "Otros"];
+export const RECENT_TREATMENT_OPTIONS = ["No", "Sí"];
 
-export const PAST_TREATMENT_OPTIONS = ["No", "Sí", "Otros"];
+export const PAST_TREATMENT_OPTIONS = ["No", "Sí"];
 
 export const AESTHETIC_TREATMENT_OPTIONS = ["No", "Sí"];
 

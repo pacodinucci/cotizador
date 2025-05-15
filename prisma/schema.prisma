@@ -141,6 +141,7 @@ model Customer {
   Appointment           Appointment[]
   Calendar              Calendar[]
   ClinicalHistory       ClinicalHistory[]
+  MedicalRecord         MedicalRecord[]
 }
 
 model Message {
@@ -187,11 +188,85 @@ model ClinicalHistory {
 }
 
 model MedicalRecord {
-  id                String          @id @default(uuid())
-  clinicalHistoryId String
-  description       String
-  date              DateTime        @default(now())
-  ClinicalHistory   ClinicalHistory @relation(fields: [clinicalHistoryId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  customerId String
+  date       DateTime @default(now())
+
+  // Condiciones agrupadas
+  cardiovascular      String[]
+  cardiovascularOther String?
+
+  bloodConditions      String[]
+  bloodConditionsOther String?
+
+  liverDiseases      String[]
+  liverDiseasesOther String?
+
+  infectiousDiseases      String[]
+  infectiousDiseasesOther String?
+
+  neurologicalConditions      String[]
+  neurologicalConditionsOther String?
+
+  lungConditions      String[]
+  lungConditionsOther String?
+
+  bloodType String
+
+  oncologicalConditions      String[]
+  oncologicalConditionsOther String?
+
+  metabolicConditions      String[]
+  metabolicConditionsOther String?
+
+  skinConditions      String[]
+  skinConditionsOther String?
+
+  gynecologicalConditions      String[]
+  gynecologicalConditionsOther String?
+
+  familyBackground      String[]
+  familyBackgroundOther String?
+
+  hormonalConditions      String[]
+  hormonalConditionsOther String?
+
+  surgeryHistory      String[]
+  surgeryHistoryOther String?
+
+  prosthesis      String[]
+  prosthesisOther String?
+
+  generalCondition String[]
+
+  medication      String[]
+  medicationOther String?
+
+  recentTreatment      String[]
+  recentTreatmentOther String?
+
+  pastTreatment      String[]
+  pastTreatmentOther String?
+
+  aestheticTreatment      String[]
+  aestheticTreatmentOther String?
+
+  allergyHistory      String[]
+  allergyHistoryOther String?
+
+  isotretinoinUsage      String[]
+  isotretinoinUsageOther String?
+
+  tetanusVaccine      String
+  tetanusVaccineOther String?
+
+  otherCondition       String[]
+  otherConditionDetail String?
+
+  // Relación
+  Customer          Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  ClinicalHistory   ClinicalHistory? @relation(fields: [clinicalHistoryId], references: [id])
+  clinicalHistoryId String?
 }
 
 model ClinicalDocument {
