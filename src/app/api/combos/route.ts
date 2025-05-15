@@ -21,9 +21,6 @@ export async function POST(req: Request) {
         title,
         price,
         smallZones,
-        zones: {
-          connect: zones.map((zoneId: string) => ({ id: zoneId })),
-        },
       },
     });
 
@@ -42,9 +39,6 @@ export async function GET(req: Request) {
     if (comboId) {
       const combo = await db.combo.findFirst({
         where: { id: comboId },
-        include: {
-          zones: true,
-        },
       });
 
       if (!combo) {
@@ -53,11 +47,7 @@ export async function GET(req: Request) {
 
       return NextResponse.json(combo, { status: 200 });
     } else {
-      const combos = await db.combo.findMany({
-        include: {
-          zones: true,
-        },
-      });
+      const combos = await db.combo.findMany();
 
       return NextResponse.json(combos, { status: 200 });
     }
