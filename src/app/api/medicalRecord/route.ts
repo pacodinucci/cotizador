@@ -20,6 +20,21 @@ export async function POST(req: Request) {
       },
     });
 
+    const existingHistory = await db.clinicalHistory.findFirst({
+      where: { customerId },
+    });
+
+    if (!existingHistory) {
+      await db.clinicalHistory.create({
+        data: {
+          customerId,
+          medicalRecords: {
+            connect: { id: medicalRecord.id },
+          },
+        },
+      });
+    }
+
     return NextResponse.json(medicalRecord, { status: 201 });
   } catch (error) {
     console.error("[MEDICAL_RECORD_POST]", error);

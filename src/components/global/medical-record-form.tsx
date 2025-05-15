@@ -179,7 +179,7 @@ const MedicalRecordForm = () => {
     };
     try {
       const response = await axios.post("/api/medicalRecord", payload);
-      router.push("/form/successfull");
+      router.push("/form/successful");
     } catch (error) {
       console.error("Error al crear el registro:", error);
     }
