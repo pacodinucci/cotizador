@@ -6,7 +6,7 @@ type Props = {};
 const FormSuccessfulPage = (props: Props) => {
   return (
     <div
-      className={`${montserrat.className} max-w-3xl mx-16 px-4 py-10 text-neutral-800`}
+      className={`${montserrat.className} max-w-3xl nd:mx-16 px-4 py-10 text-neutral-800`}
     >
       <h1 className="text-5xl font-bold mb-6">
         Gracias por completar el formulario!{" "}
