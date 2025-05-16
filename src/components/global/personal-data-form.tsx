@@ -514,7 +514,7 @@ const PersonalDataForm = () => {
                   <FormItem className="w-full">
                     <FormLabel>Cobertura Médica</FormLabel>
                     <FormControl>
-                      <Input {...field} className="w-[97%]" />
+                      <Input {...field} className="w-80" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -529,7 +529,7 @@ const PersonalDataForm = () => {
                   <FormItem>
                     <FormLabel>Plan de Cobertura Médica</FormLabel>
                     <FormControl>
-                      <Input {...field} className="w-[97%]" />
+                      <Input {...field} className="w-80 md:w-auto" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -544,7 +544,7 @@ const PersonalDataForm = () => {
                       Número de asociado de Cobertura Médica
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} className="w-[97%]" />
+                      <Input {...field} className="w-80 md:w-auto" />
                     </FormControl>
                   </FormItem>
                 )}
