@@ -32,6 +32,7 @@ import {
   NATIONALITIES,
   PROVINCES,
 } from "@/lib/formConstants";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "El nombre es requerido." }),
@@ -57,6 +58,9 @@ const formSchema = z.object({
 
   nationality: z.string().min(1, { message: "La nacionalidad es requerida." }),
   profession: z.string().optional(),
+
+  contactName: z.string().optional(),
+  contactNumber: z.string().optional(),
 
   approach: z.array(z.string()).min(1, { message: "Debes elegir una opción." }),
   approachContact: z.string().optional(),
@@ -107,7 +111,7 @@ const PersonalDataForm = () => {
   };
 
   return (
-    <div className={`${montserrat.className} p-4 md:px-40 w-[70vw] mx-auto`}>
+    <div className={`${montserrat.className} p-4 md:px-40 md:w-[70vw] mx-auto`}>
       <div className="my-4">
         <h1 className="text-4xl text-neutral-900">Datos Personales</h1>
         <h3 className="text-lg text-neutral-500">
@@ -116,272 +120,315 @@ const PersonalDataForm = () => {
       </div>
       <Form {...form}>
         <form
-          className="flex flex-col gap-y-8 py-4"
+          className="flex flex-col gap-y-8 py-4 text-neutral-800"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <div className="flex gap-x-12">
-            {/* Email */}
-            <FormField
-              name="email"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="w-96" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <div className="p-2 rounded-md bg-neutral-50 flex flex-col gap-y-8">
+            <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 gap-x-12">
+              {/* Email */}
+              <FormField
+                name="email"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-80" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Teléfono
-            <FormField
-              name="phone"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Teléfono</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="w-96" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                Teléfono
-              </label>
-              <div className="flex gap-x-2">
-                {/* Característica */}
-                <FormField
-                  name="phonePrefix"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Ej: 11"
-                          className="w-24"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* Número */}
-                <FormField
-                  name="phoneNumber"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Número"
-                          className="w-72"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Teléfono
+                </label>
+                <div className="flex gap-x-2">
+                  {/* Característica */}
+                  <FormField
+                    name="phonePrefix"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Ej: 11"
+                            className="w-20"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Número */}
+                  <FormField
+                    name="phoneNumber"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Número"
+                            className="w-56"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex gap-x-12">
-            {/* Nombre */}
-            <FormField
-              name="name"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre Completo</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="w-96" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Apodo */}
-            <FormField
-              name="nickname"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Apodo</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="w-96" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="flex gap-12">
-            {/* Género */}
-            <FormField
-              name="gender"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Género</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl className="w-96">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona género" />
-                      </SelectTrigger>
+            <div className="flex flex-col md:flex-row gap-y-8 md:gap-y-0 gap-x-12">
+              {/* Nombre */}
+              <FormField
+                name="name"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre Completo</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-80" />
                     </FormControl>
                     <FormMessage />
-                    <SelectContent>
-                      <SelectItem value="Femenino">Femenino</SelectItem>
-                      <SelectItem value="Masculino">Masculino</SelectItem>
-                      <SelectItem value="Otro">Otro</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
+                  </FormItem>
+                )}
+              />
 
-            {/* Fecha de nacimiento */}
-            <FormField
-              name="birthDate"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Fecha de nacimiento</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} className="w-96" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+              {/* Apodo */}
+              <FormField
+                name="nickname"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apodo</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-80" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <div className="flex gap-x-12">
-            {/* Nacionalidad */}
-            <FormField
-              name="nationality"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nacionalidad</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl className="w-96">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona una nacionalidad" />
-                      </SelectTrigger>
+            <div className="flex flex-col md:flex-row gap-12">
+              {/* Género */}
+              <FormField
+                name="gender"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Género</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl className="w-80">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona género" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <FormMessage />
+                      <SelectContent>
+                        <SelectItem value="Femenino">Femenino</SelectItem>
+                        <SelectItem value="Masculino">Masculino</SelectItem>
+                        <SelectItem value="Otro">Otro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              {/* Fecha de nacimiento */}
+              <FormField
+                name="birthDate"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fecha de nacimiento</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} className="w-80" />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-                    <SelectContent>
-                      {NATIONALITIES.map((n) => (
-                        <SelectItem key={n} value={n}>
-                          {n}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
+            <div className="flex flex-col md:flex-row gap-y-8 md:gap-y-0 gap-x-12">
+              {/* Nacionalidad */}
+              <FormField
+                name="nationality"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nacionalidad</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl className="w-80">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona una nacionalidad" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <FormMessage />
 
-            {/* DNI */}
-            <FormField
-              name="dni"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>DNI</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="w-96" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                      <SelectContent>
+                        {NATIONALITIES.map((n) => (
+                          <SelectItem key={n} value={n}>
+                            {n}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
 
-          <div className="flex gap-x-12">
-            {/* Domicilio */}
-            <FormField
-              name="address"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Domicilio</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="w-96" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Provincia */}
-            <FormField
-              name="province"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Provincia</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl className="w-96">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona una provincia" />
-                      </SelectTrigger>
+              {/* DNI */}
+              <FormField
+                name="dni"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>DNI</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-80" />
                     </FormControl>
-                    <SelectContent>
-                      {PROVINCES.map((n) => (
-                        <SelectItem key={n} value={n}>
-                          {n}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-y-8 md:gap-y-0 gap-x-12">
+              {/* Domicilio */}
+              <FormField
+                name="address"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Domicilio</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-80" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Provincia */}
+              <FormField
+                name="province"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provincia</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl className="w-80">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona una provincia" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {PROVINCES.map((n) => (
+                          <SelectItem key={n} value={n}>
+                            {n}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 gap-x-12">
+              {/* Barrio */}
+              <FormField
+                name="neighborhood"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Barrio</FormLabel>
+                    <FormLabel className="pl-2 text-xs text-neutral-500">
+                      * Solo si vivís en CABA
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-80" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {/* Localidad */}
+              <FormField
+                name="city"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Localidad</FormLabel>
+                    <FormLabel className="pl-2 text-xs text-neutral-500">
+                      * Solo si no vivís en CABA
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-80" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Profesión */}
+            <FormField
+              name="profession"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Profesión</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="w-80" />
+                  </FormControl>
                 </FormItem>
               )}
             />
           </div>
 
-          <div className="flex gap-x-12">
-            {/* Barrio */}
+          <div className="flex flex-col gap-y-8 bg-orange-50 p-2 rounded-md">
+            <div>
+              <h3>Contacto de Emergencia</h3>
+              <h4 className="text-sm text-neutral-800">
+                Podés dejarnos un contacto de emergencia de un amigo o familiar
+                ante cualquier eventualidad que pueda suceder en el consultorio.
+              </h4>
+            </div>
+            {/* Nombre de Contacto */}
             <FormField
-              name="neighborhood"
+              name="contactName"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Barrio</FormLabel>
+                  <FormLabel>Nombre de Contacto</FormLabel>
                   <FormControl>
-                    <Input {...field} className="w-96" />
+                    <Input {...field} className="w-80" />
                   </FormControl>
                 </FormItem>
               )}
             />
-
-            {/* Localidad */}
+            {/* Número de Contacto */}
             <FormField
-              name="city"
+              name="contactNumber"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Localidad</FormLabel>
+                  <FormLabel>Número de teléfono de Contacto</FormLabel>
                   <FormControl>
-                    <Input {...field} className="w-96" />
+                    <Input {...field} className="w-80" />
                   </FormControl>
                 </FormItem>
               )}
             />
           </div>
 
-          <div className="flex flex-col gap-y-8">
+          <div className="flex flex-col gap-y-8 p-2 bg-emerald-50 rounded-md">
             {/* Cómo se acercó (checkbox group) */}
             <FormField
               name="approach"
@@ -420,7 +467,7 @@ const PersonalDataForm = () => {
                         <FormItem className="mt-2">
                           <FormLabel>Especificá el motivo:</FormLabel>
                           <FormControl>
-                            <Input {...field} className="w-96" />
+                            <Input {...field} className="w-80" />
                           </FormControl>
                         </FormItem>
                       )}
@@ -442,7 +489,7 @@ const PersonalDataForm = () => {
                         <FormItem className="mt-2">
                           <FormLabel>¿Quién te recomendó o refirió?</FormLabel>
                           <FormControl>
-                            <Input {...field} className="w-96" />
+                            <Input {...field} className="w-80" />
                           </FormControl>
                         </FormItem>
                       )}
@@ -453,37 +500,27 @@ const PersonalDataForm = () => {
             />
           </div>
 
-          {/* Localidad */}
-          <FormField
-            name="profession"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Profesión</FormLabel>
-                <FormControl>
-                  <Input {...field} className="w-96" />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <div className="flex flex-col gap-y-8">
+          <div className="flex flex-col gap-y-8 bg-zinc-50 p-2 rounded-md">
+            <h3>
+              ⛔ Completar solo si vas a realizar una consulta con el Dr.
+              Wetzel. Caso contrario no es necesario completar
+            </h3>
             <div className="flex gap-y-12">
               {/* Cobertura Médica */}
               <FormField
                 name="medicalCoverage"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormLabel>Cobertura Médica</FormLabel>
                     <FormControl>
-                      <Input {...field} className="w-96" />
+                      <Input {...field} className="w-[97%]" />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </div>
-            <div className="flex gap-x-12">
+            <div className="flex flex-col md:flex-row gap-y-8 md:gap-y-0 gap-x-12">
               {/* Cobertura Médica */}
               <FormField
                 name="medicalCoveragePlan"
@@ -492,7 +529,7 @@ const PersonalDataForm = () => {
                   <FormItem>
                     <FormLabel>Plan de Cobertura Médica</FormLabel>
                     <FormControl>
-                      <Input {...field} className="w-96" />
+                      <Input {...field} className="w-[97%]" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -507,7 +544,7 @@ const PersonalDataForm = () => {
                       Número de asociado de Cobertura Médica
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} className="w-96" />
+                      <Input {...field} className="w-[97%]" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -518,9 +555,10 @@ const PersonalDataForm = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-1/4 self-center"
+            className="w-full md:w-1/4 self-center text-lg md:text-base"
           >
-            {isLoading ? "Enviando..." : "Siguiente"}
+            {isLoading ? "Cargando" : "Siguiente"}
+            {isLoading && <Loader2 className="h-5 w-5 animate-spin ml-2" />}
           </Button>
         </form>
       </Form>

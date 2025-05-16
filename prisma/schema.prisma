@@ -137,6 +137,8 @@ model Customer {
   medicalCoverage       String?
   medicalCoveragePlan   String?
   medicalCoverageNumber String?
+  contactName           String?
+  contactNumber         String?
   createdAt             DateTime          @default(now())
   Appointment           Appointment[]
   Calendar              Calendar[]

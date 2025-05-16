@@ -52,6 +52,7 @@ import {
   TETANUS_VACCINE_OPTIONS,
 } from "@/lib/formConstants";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   cardiovascular: z
@@ -186,14 +187,16 @@ const MedicalRecordForm = () => {
   };
 
   return (
-    <div className={`${montserrat.className} p-4 md:px-40 w-[70vw] mx-auto`}>
+    <div className={`${montserrat.className} p-4 md:px-40 md:w-[70vw] mx-auto`}>
       <div className="my-4">
-        <h1 className="text-4xl text-neutral-900">Cuestionario de Salud</h1>
+        <h1 className="text-3xl mb-2 md:mb-0 md:text-4xl text-neutral-900">
+          Cuestionario de Salud
+        </h1>
         <h3 className="text-lg text-neutral-500">
           A continuación te haremos algunas preguntas relacionadas con tu
           historial médico. Si tenes antecedentes de alguna de las condiciones
-          por favor marcala/s y luego describi cualquier detalle importante en
-          &quot;otro&quot;.
+          por favor marcala y luego describí cualquier detalle importante en
+          &quot;Otros&quot;.
         </h3>
       </div>
       <Form {...form}>
@@ -258,7 +261,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -328,7 +331,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -398,7 +401,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -468,7 +471,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -537,7 +540,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -605,7 +608,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -629,12 +632,11 @@ const MedicalRecordForm = () => {
                 <div className="flex flex-col gap-2 px-2">
                   {BLOOD_TYPES.map((type) => (
                     <label key={type} className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        value={type}
+                      <Checkbox
                         checked={field.value === type}
-                        onChange={() => field.onChange(type)}
-                        className="accent-green-600"
+                        onCheckedChange={() => {
+                          field.onChange(field.value === type ? "" : type);
+                        }}
                       />
                       {type}
                     </label>
@@ -699,7 +701,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -765,7 +767,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -831,7 +833,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -901,7 +903,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -957,7 +959,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -1023,7 +1025,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Especificar..."
                           />
                         </FormControl>
@@ -1095,7 +1097,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Ej: cesárea (2019), sin complicaciones"
                           />
                         </FormControl>
@@ -1167,7 +1169,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Ej: prótesis dental"
                           />
                         </FormControl>
@@ -1288,7 +1290,7 @@ const MedicalRecordForm = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            className="w-96"
+                            className="w-80"
                             placeholder="Ej: Ibuprofeno 600mg, 1 cada 8 hs"
                           />
                         </FormControl>
@@ -1582,7 +1584,7 @@ const MedicalRecordForm = () => {
                           Especificá cuándo y por qué razón:
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} className="w-96" />
+                          <Input {...field} className="w-80" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1643,9 +1645,10 @@ const MedicalRecordForm = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-1/4 self-center"
+            className="w-full md:w-1/4 self-center text-lg md:text-base"
           >
-            {isLoading ? "Enviando..." : "Siguiente"}
+            {isLoading ? "Cargando" : "Siguiente"}
+            {isLoading && <Loader2 className="h-5 w-5 animate-spin ml-2" />}
           </Button>
         </form>
       </Form>
