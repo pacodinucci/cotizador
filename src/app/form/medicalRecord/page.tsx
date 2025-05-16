@@ -5,7 +5,7 @@ import MedicalRecordForm from "@/components/global/medical-record-form";
 
 const MedicalRecordPage = () => {
   return (
-    <div>
+    <div className="pb-16">
       <MedicalRecordForm />
     </div>
   );
