@@ -20,11 +20,16 @@ export default async function AdminLayout({
 
   return (
     <SidebarProvider>
-      <AdminSidebar />
-      <main>
-        <SidebarTrigger />
-        {children}
-      </main>
+      <div className="flex">
+        <AdminSidebar />
+        <div className="flex-1 h-screen flex flex-col overflow-hidden">
+          <div className="sticky top-0 z-20 bg-white">
+            <SidebarTrigger />
+          </div>
+
+          <main className="flex-1 overflow-auto">{children}</main>
+        </div>
+      </div>
     </SidebarProvider>
   );
 }

@@ -5,7 +5,7 @@ type Props = {};
 
 const PersonalDataPage = (props: Props) => {
   return (
-    <div>
+    <div className="pb-16">
       <PersonalDataForm />
     </div>
   );

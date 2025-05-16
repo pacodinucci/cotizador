@@ -43,7 +43,7 @@ const itemsProfesionales = [
   },
   {
     title: "Pacientes",
-    url: "#",
+    url: "/admin/customers",
     icon: UsersRound,
   },
   {
@@ -96,7 +96,7 @@ const itemsAdministracion = [
 
 export function AdminSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className="z-50">
       <SidebarHeader>
         <Image src={"/logow.png"} alt="logo clinica w" width={900} height={0} />
       </SidebarHeader>
