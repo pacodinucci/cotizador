@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
 import { Customer } from "@prisma/client";
+import { Loader2 } from "lucide-react";
 
 interface CustomerComponentProps {
   customer: Customer;
@@ -12,6 +13,13 @@ interface CustomerComponentProps {
 
 const CustomerComponent: React.FC<CustomerComponentProps> = ({ customer }) => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleMedicalClick = () => {
+    setIsLoading(true);
+    router.push(`/admin/medicalRecord/${customer.id}`);
+  };
+
   return (
     <main className="w-[80%] mx-6 p-6 space-y-8">
       {/* Encabezado */}
@@ -23,11 +31,12 @@ const CustomerComponent: React.FC<CustomerComponentProps> = ({ customer }) => {
           <p className="text-gray-500">{customer.nickname || "Sin alias"}</p>
         </div>
         <div className="flex flex-col gap-y-2 w-[15vw]">
-          <Button
-            variant={"outline"}
-            onClick={() => router.push(`/admin/medicalRecord/${customer.id}`)}
-          >
-            Antecedentes Médicos
+          <Button variant={"outline"} onClick={handleMedicalClick}>
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Antecedentes Médicos"
+            )}
           </Button>
           <Button variant={"outline"}>Historia Clínica</Button>
         </div>

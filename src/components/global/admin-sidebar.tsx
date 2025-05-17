@@ -34,6 +34,7 @@ import {
   BanknoteArrowDown,
 } from "lucide-react";
 import Image from "next/image";
+import UserComponent from "./user-component";
 
 const itemsProfesionales = [
   {
@@ -153,7 +154,9 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        <UserComponent />
+      </SidebarFooter>
     </Sidebar>
   );
 }

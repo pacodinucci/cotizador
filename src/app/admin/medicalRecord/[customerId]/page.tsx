@@ -20,7 +20,20 @@ const MedicalRecordPage = async ({ params }: MedicalRecordPageProps) => {
     return notFound();
   }
 
-  return <MedicalRecordComponent record={medicalRecord} />;
+  const customer = await db.customer.findUnique({
+    where: {
+      id: params.customerId,
+    },
+  });
+
+  const customerName = customer?.name;
+
+  return (
+    <MedicalRecordComponent
+      record={medicalRecord}
+      customerName={customerName}
+    />
+  );
 };
 
 export default MedicalRecordPage;
