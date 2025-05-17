@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { CellAction } from "./cell-action";
 // import {CellAction} from "./cell-action"
 
 export type CustomersColumn = {
@@ -32,5 +33,9 @@ export const columns: ColumnDef<CustomersColumn>[] = [
   {
     accessorKey: "createdAt",
     header: "Fecha de ingreso",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

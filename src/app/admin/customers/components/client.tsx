@@ -14,9 +14,9 @@ interface CustomersClientProps {
 
 export const CustomersClient: React.FC<CustomersClientProps> = ({ data }) => {
   return (
-    <div className="h-full w-full">
+    <div className="h-full">
       <div className="px-4 overflow-auto">
-        <div className="min-w-[800px]">
+        <div>
           <DataTable columns={columns} data={data} searchKey="name" />
         </div>
       </div>

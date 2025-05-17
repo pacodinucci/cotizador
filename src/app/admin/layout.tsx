@@ -27,7 +27,9 @@ export default async function AdminLayout({
             <SidebarTrigger />
           </div>
 
-          <main className="flex-1 overflow-auto">{children}</main>
+          <main className="flex-1 overflow-auto w-[calc(100vw-16rem)]">
+            {children}
+          </main>
         </div>
       </div>
     </SidebarProvider>

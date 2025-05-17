@@ -20,7 +20,7 @@ const CustomersPage = async () => {
   }));
 
   return (
-    <main className="w-screen min-h-screen md:min-h-0 bg-white md:rounded-md md:shadow-md mb-10">
+    <main className="min-h-screen md:min-h-0 bg-white md:rounded-md md:shadow-md mb-10">
       <div className="sticky top-0 z-10 bg-white">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 px-6 py-4">
           <Heading
