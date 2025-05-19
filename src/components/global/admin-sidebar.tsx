@@ -113,7 +113,7 @@ export function AdminSidebar() {
   }, [open]);
 
   return (
-    <Sidebar className="z-50" variant="inset">
+    <Sidebar className="z-50 border border-r-neutral-200" variant="inset">
       <SidebarHeader>
         <Image src={"/logow.png"} alt="logo clinica w" width={900} height={0} />
       </SidebarHeader>

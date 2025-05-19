@@ -6,6 +6,8 @@ import {
 import { AdminSidebar } from "@/components/global/admin-sidebar";
 import { auth } from "../../../auth";
 import { redirect } from "next/navigation";
+import { ThemeProvider } from "@/components/global/theme-provider";
+import { ModeToggle } from "@/components/global/mode-toggle";
 
 export default async function AdminLayout({
   children,
@@ -22,26 +24,28 @@ export default async function AdminLayout({
     redirect("/");
   }
 
-  const toggleSidebar = () => {
-    const mainContainer = document.querySelector(".main-container");
-    if (mainContainer) {
-      mainContainer.classList.toggle("sidebar-open");
-      mainContainer.classList.toggle("sidebar-closed");
-    }
-  };
-
   return (
-    <SidebarProvider>
-      <div className="flex">
-        <AdminSidebar />
-        <div className="flex-1 h-screen flex flex-col overflow-hidden">
-          <div className="sticky top-0 z-20 bg-white">
-            <SidebarTrigger />
-          </div>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <SidebarProvider>
+        <div className="flex">
+          <AdminSidebar />
+          <div className="flex-1 h-screen flex flex-col overflow-hidden">
+            <div className="sticky top-0 z-20 flex items-center justify-between px-4 py-2">
+              <SidebarTrigger />
+              <ModeToggle />
+            </div>
 
-          <main className="flex-1 overflow-auto main-content">{children}</main>
+            <main className="flex-1 overflow-auto main-content">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
