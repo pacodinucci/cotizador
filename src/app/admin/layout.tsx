@@ -1,4 +1,8 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/global/admin-sidebar";
 import { auth } from "../../../auth";
 import { redirect } from "next/navigation";
@@ -18,6 +22,14 @@ export default async function AdminLayout({
     redirect("/");
   }
 
+  const toggleSidebar = () => {
+    const mainContainer = document.querySelector(".main-container");
+    if (mainContainer) {
+      mainContainer.classList.toggle("sidebar-open");
+      mainContainer.classList.toggle("sidebar-closed");
+    }
+  };
+
   return (
     <SidebarProvider>
       <div className="flex">
@@ -27,9 +39,7 @@ export default async function AdminLayout({
             <SidebarTrigger />
           </div>
 
-          <main className="flex-1 overflow-auto w-[calc(100vw-16rem)]">
-            {children}
-          </main>
+          <main className="flex-1 overflow-auto main-content">{children}</main>
         </div>
       </div>
     </SidebarProvider>

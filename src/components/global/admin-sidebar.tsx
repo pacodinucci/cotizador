@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -35,6 +38,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import UserComponent from "./user-component";
+import { useEffect } from "react";
 
 const itemsProfesionales = [
   {
@@ -96,8 +100,20 @@ const itemsAdministracion = [
 ];
 
 export function AdminSidebar() {
+  const { open } = useSidebar();
+
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add("sidebar-open");
+      document.body.classList.remove("sidebar-closed");
+    } else {
+      document.body.classList.add("sidebar-closed");
+      document.body.classList.remove("sidebar-open");
+    }
+  }, [open]);
+
   return (
-    <Sidebar className="z-50">
+    <Sidebar className="z-50" variant="inset">
       <SidebarHeader>
         <Image src={"/logow.png"} alt="logo clinica w" width={900} height={0} />
       </SidebarHeader>

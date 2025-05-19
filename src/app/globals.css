@@ -102,8 +102,6 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
@@ -111,4 +109,16 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.main-content {
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar-open .main-content {
+  width: calc(100vw - 16rem);
+}
+
+.sidebar-closed .main-content {
+  width: 100vw;
 }
