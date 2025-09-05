@@ -60,13 +60,13 @@ const CotizadorSteps = () => {
     if (selectedTreatments.length === 0 || selectedTreatments.length === 1) {
       setDescuento(0);
     } else if (selectedTreatments.length === 2) {
-      setDescuento(20);
+      setDescuento(5);
     } else if (selectedTreatments.length === 3) {
-      setDescuento(25);
+      setDescuento(15);
     } else if (selectedTreatments.length === 4) {
-      setDescuento(30);
+      setDescuento(20);
     } else if (selectedTreatments.length >= 5) {
-      setDescuento(35);
+      setDescuento(25);
     }
   }, [selectedTreatments]);
 
